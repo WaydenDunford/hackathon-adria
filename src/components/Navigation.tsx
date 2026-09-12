@@ -1,61 +1,57 @@
 import React, { useState } from 'react';
 import { NavTab, HealthProfileState } from '../types';
-import { Activity, CalendarDays, CheckCircle2, ChevronRight, CircleUserRound, CreditCard, LayoutDashboard, Menu, Salad, X } from 'lucide-react';
+import { Activity, AppWindow, BedDouble, BookOpen, Calendar, CalendarDays, CheckCircle2, ChartLine, ChevronDown, Circle, CircleUserRound, ClipboardCheck, CreditCard, Database, Disc, Dumbbell, FileBarChart, FileText, FlaskConical, Footprints, HeartPulse, History, LayoutDashboard, Lightbulb, Menu, MessageCircle, PersonStanding, Pill, Repeat2, Ruler, Salad, ScanLine, Settings, ShieldAlert, ShoppingBasket, Stethoscope, Target, TrendingUp, Users, UsersRound, Watch, X } from 'lucide-react';
 
 interface NavigationProps {
   currentTab: NavTab;
   onSelectTab: (tab: NavTab) => void;
   healthProfile: HealthProfileState;
   onOpenAdjustments: () => void;
+  onCollapsedChange: (collapsed: boolean) => void;
 }
 
-const navItems: { id: NavTab; label: string; icon: React.ElementType }[] = [
+type FutureItem = { label: string; icon: React.ElementType };
+type FutureGroup = { id: string; label: string; icon: React.ElementType; items: FutureItem[] };
+
+const coreItems: { id: NavTab; label: string; icon: React.ElementType }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'meals', label: 'Meal Plan', icon: Salad },
   { id: 'workouts', label: 'Workout Plan', icon: Activity },
-  { id: 'profile', label: 'Health Profile', icon: CircleUserRound },
-  { id: 'pricing', label: 'Pricing', icon: CreditCard },
 ];
 
-export const Navigation: React.FC<NavigationProps> = ({ currentTab, onSelectTab, healthProfile, onOpenAdjustments }) => {
+const futureGroups: FutureGroup[] = [
+  { id: 'my-health', label: 'My health', icon: HeartPulse, items: [{ label: 'Daily Check-In', icon: ClipboardCheck }, { label: 'Symptoms', icon: Stethoscope }, { label: 'Health Timeline', icon: History }] },
+  { id: 'tracking', label: 'Tracking', icon: ChartLine, items: [{ label: 'Progress', icon: TrendingUp }, { label: 'Measurements', icon: Ruler }, { label: 'Sleep & Recovery', icon: BedDouble }, { label: 'Activity', icon: Footprints }] },
+  { id: 'health-data', label: 'Health data', icon: FileText, items: [{ label: 'Health Records', icon: FileText }, { label: 'Lab Results', icon: FlaskConical }, { label: 'Medications', icon: Pill }] },
+  { id: 'intelligence', label: 'Intelligence', icon: Lightbulb, items: [{ label: 'Health Insights', icon: Lightbulb }, { label: 'Trends', icon: ChartLine }, { label: 'Favia Coach', icon: MessageCircle }] },
+  { id: 'connected', label: 'Connected health', icon: Watch, items: [{ label: 'Devices & Wearables', icon: Watch }, { label: 'Connected Apps', icon: AppWindow }, { label: 'Data Sources', icon: Database }] },
+  { id: 'care', label: 'Care', icon: UsersRound, items: [{ label: 'Care Team', icon: UsersRound }, { label: 'Appointments', icon: CalendarDays }, { label: 'Reports', icon: FileBarChart }] },
+  { id: 'explore', label: 'Explore', icon: BookOpen, items: [{ label: 'Recipes', icon: BookOpen }, { label: 'Grocery', icon: ShoppingBasket }, { label: 'Food Scanner', icon: ScanLine }, { label: 'Exercise Library', icon: Dumbbell }, { label: 'Mobility', icon: PersonStanding }] },
+  { id: 'planning', label: 'Planning', icon: Calendar, items: [{ label: 'Calendar', icon: Calendar }, { label: 'Goals', icon: Target }, { label: 'Routines', icon: Repeat2 }, { label: 'Family Profiles', icon: Users }, { label: 'Emergency Profile', icon: ShieldAlert }] },
+];
+
+const FutureGroups: React.FC<{ expanded: Record<string, boolean>; onToggle: (id: string) => void }> = ({ expanded, onToggle }) => <div className="mt-2 space-y-1 border-t border-slate-100 pt-3">{futureGroups.map((group) => { const GroupIcon = group.icon; return <div key={group.id}><button onClick={() => onToggle(group.id)} className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900" aria-expanded={!!expanded[group.id]}><GroupIcon className="h-[18px] w-[18px] shrink-0" /><span className="flex-1">{group.label}</span><ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${expanded[group.id] ? 'rotate-180' : ''}`} /></button>{expanded[group.id] && <div className="space-y-1 py-1">{group.items.map((item) => { const Icon = item.icon; return <div key={item.label} className="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-3 pl-8 text-sm font-medium text-slate-400" aria-disabled="true"><Icon className="h-[18px] w-[18px] shrink-0" /><span className="flex-1">{item.label}</span><span className="rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-400">Soon</span></div>; })}</div>}</div>; })}</div>;
+
+export const Navigation: React.FC<NavigationProps> = ({ currentTab, onSelectTab, healthProfile, onOpenAdjustments, onCollapsedChange }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isHoverExpanded, setIsHoverExpanded] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const totalFactors = healthProfile.conditions.length + healthProfile.allergies.length + healthProfile.physicalLimitations.length;
-  const profileHighlights = [...healthProfile.conditions, ...healthProfile.allergies, ...healthProfile.dietaryPreferences].slice(0, 3);
+  const showExpandedContent = !isCollapsed || isHoverExpanded;
   const selectTab = (tab: NavTab) => { onSelectTab(tab); setMobileMenuOpen(false); };
+  const toggleCollapsed = () => setIsCollapsed((collapsed) => { onCollapsedChange(!collapsed); return !collapsed; });
+  const toggleGroup = (id: string) => setExpandedGroups((groups) => ({ ...groups, [id]: !groups[id] }));
+  const coreNav = (compact = false) => <>{coreItems.map((item) => { const Icon = item.icon; const isActive = currentTab === item.id; return <button key={item.id} id={`nav-link-${item.id}`} onClick={() => selectTab(item.id)} title={compact ? item.label : undefined} className={`flex w-full items-center rounded-xl py-3 text-left text-sm font-semibold transition-all ${compact ? 'justify-center px-2' : 'gap-3 px-3'} ${isActive ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}><Icon className="h-[18px] w-[18px] shrink-0" />{!compact && <span className="whitespace-nowrap">{item.label}</span>}</button>; })}</>;
 
   return <>
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 flex-col border-r border-slate-200 bg-white px-4 py-5 shadow-sm md:flex">
-      <button id="brand-logo-btn" onClick={() => selectTab('dashboard')} className="mb-8 flex items-center gap-3 px-2 text-left">
-        <div className="h-10 w-10 overflow-hidden rounded-xl border border-teal-100 bg-white shadow-sm"><img src="/favia-health-favicon.png" alt="Favia Health" className="h-full w-full object-cover" /></div>
-        <div><p className="text-base font-bold tracking-tight text-slate-900">Favia Health</p><p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-teal-600">Your wellness space</p></div>
-      </button>
-
-      <nav className="space-y-1" aria-label="Main navigation">
-        {navItems.map((item) => {
-          const Icon = item.icon; const isActive = currentTab === item.id;
-          return <button key={item.id} id={`nav-link-${item.id}`} onClick={() => selectTab(item.id)} className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition-all ${isActive ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}><Icon className="h-[18px] w-[18px]" />{item.label}</button>;
-        })}
-      </nav>
-
-      <div className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-3">
-        <button id="nav-health-status-badge" onClick={onOpenAdjustments} className="flex w-full items-center gap-2 text-left" title="View your active health safeguards">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700"><CheckCircle2 className="h-4 w-4" /></span>
-          <span className="flex-1"><span className="block text-xs font-bold text-emerald-900">Safeguards active</span><span className="block text-[11px] text-emerald-700">{totalFactors} health factors protected</span></span><ChevronRight className="h-4 w-4 text-emerald-600" />
-        </button>
-      </div>
-
-      <div className="mt-auto border-t border-slate-100 pt-4">
-        <button onClick={() => selectTab('profile')} className="w-full rounded-2xl bg-slate-50 p-3 text-left transition-colors hover:bg-slate-100" aria-label="Open health profile">
-          <div className="flex items-center gap-2.5"><span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-700">Y</span><span className="min-w-0 flex-1"><span className="block text-sm font-bold text-slate-800">Your profile</span><span className="block truncate text-[11px] text-slate-500">Personalized plan</span></span><ChevronRight className="h-4 w-4 text-slate-400" /></div>
-          {profileHighlights.length > 0 && <div className="mt-3 flex flex-wrap gap-1.5">{profileHighlights.map((item) => <span key={item} className="rounded-md bg-white px-1.5 py-0.5 text-[10px] font-medium text-slate-600 ring-1 ring-slate-200">{item}</span>)}</div>}
-        </button>
-      </div>
+    <aside onMouseEnter={() => isCollapsed && setIsHoverExpanded(true)} onMouseLeave={() => setIsHoverExpanded(false)} className={`fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-slate-200 bg-white py-5 shadow-sm transition-[width] duration-[400ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] md:flex ${showExpandedContent ? 'w-72 px-4' : 'w-20 px-3'}`}>
+      <div className={`mb-6 flex items-center ${showExpandedContent ? 'justify-between px-2' : 'justify-center'}`}><button id="brand-logo-btn" onClick={() => selectTab('dashboard')} className="flex items-center text-left" aria-label="Favia Health home"><img src="/favia-health-favicon.png" alt="Favia Health" className="h-10 w-10 object-contain" />{showExpandedContent && <p className="ml-3 whitespace-nowrap text-base font-bold tracking-tight text-slate-900">Favia Health</p>}</button>{showExpandedContent && <button onClick={toggleCollapsed} className="cursor-pointer rounded-lg p-2 text-teal-600 transition hover:bg-slate-100 hover:text-teal-800" aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'} title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}>{isCollapsed ? <Circle className="h-5 w-5" /> : <Disc className="h-5 w-5" />}</button>}</div>
+      <div className="min-h-0 flex-1 overflow-y-auto pr-1"><nav aria-label="Main navigation">{showExpandedContent && <p className="mb-1 px-3 text-[10px] font-bold uppercase tracking-[0.13em] text-slate-400">Today</p>}{coreNav(!showExpandedContent)}<button id="nav-health-status-badge" onClick={onOpenAdjustments} title={!showExpandedContent ? 'Safeguards' : undefined} className={`mt-1 flex w-full items-center rounded-xl py-3 text-left text-sm font-semibold transition-all ${showExpandedContent ? 'gap-3 px-3' : 'justify-center px-2'} text-slate-600 hover:bg-slate-100 hover:text-slate-900`}><CheckCircle2 className="h-[18px] w-[18px] shrink-0 text-emerald-600" />{showExpandedContent && <span className="flex-1 whitespace-nowrap">Safeguards <span className="text-xs font-medium text-slate-400">({totalFactors})</span></span>}</button>{showExpandedContent && <FutureGroups expanded={expandedGroups} onToggle={toggleGroup} />}</nav></div>
+      <div className="border-t border-slate-100 pt-4"><button onClick={() => selectTab('settings')} title={!showExpandedContent ? 'Settings' : undefined} className={`mb-2 flex w-full items-center rounded-xl py-3 text-left text-sm font-semibold transition-all ${showExpandedContent ? 'gap-3 px-3' : 'justify-center px-2'} ${currentTab === 'settings' ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}><Settings className="h-[18px] w-[18px] shrink-0" />{showExpandedContent && <span className="whitespace-nowrap">Settings</span>}</button><button onClick={() => selectTab('pricing')} title={!showExpandedContent ? 'Pricing' : undefined} className={`mb-2 flex w-full items-center rounded-xl py-3 text-left text-sm font-semibold transition-all ${showExpandedContent ? 'gap-3 px-3' : 'justify-center px-2'} ${currentTab === 'pricing' ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}><CreditCard className="h-[18px] w-[18px] shrink-0" />{showExpandedContent && <span className="whitespace-nowrap">Pricing</span>}</button><button onClick={() => selectTab('profile')} title={!showExpandedContent ? 'Profile' : undefined} className={`flex w-full items-center rounded-xl py-3 text-left text-sm font-semibold transition-all ${showExpandedContent ? 'gap-3 px-3' : 'justify-center px-2'} ${currentTab === 'profile' ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`} aria-label="Open health profile"><CircleUserRound className="h-[18px] w-[18px] shrink-0" />{showExpandedContent && <span className="whitespace-nowrap">Profile</span>}</button></div>
     </aside>
 
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur-md md:hidden">
-      <button onClick={() => selectTab('dashboard')} className="flex items-center gap-2.5 text-left"><div className="h-9 w-9 overflow-hidden rounded-xl border border-teal-100 bg-white"><img src="/favia-health-favicon.png" alt="Favia Health" className="h-full w-full object-cover" /></div><span className="font-bold tracking-tight text-slate-900">Favia Health</span></button>
-      <div className="flex items-center gap-2"><button onClick={onOpenAdjustments} className="rounded-lg border border-emerald-200 bg-emerald-50 p-2 text-emerald-700" aria-label="Health safeguards"><CalendarDays className="h-4 w-4" /></button><button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="rounded-lg p-2 text-slate-600 hover:bg-slate-100" aria-label="Toggle navigation">{mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button></div>
-    </header>
-    {mobileMenuOpen && <div className="fixed inset-x-0 top-16 z-30 border-b border-slate-200 bg-white p-3 shadow-lg md:hidden">{navItems.map((item) => { const Icon = item.icon; const isActive = currentTab === item.id; return <button key={item.id} onClick={() => selectTab(item.id)} className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold ${isActive ? 'bg-teal-50 text-teal-800' : 'text-slate-700'}`}><Icon className="h-4 w-4" />{item.label}</button>; })}</div>}
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur-md md:hidden"><button onClick={() => selectTab('dashboard')} className="flex items-center gap-2.5 text-left"><img src="/favia-health-favicon.png" alt="Favia Health" className="h-9 w-9 object-contain" /><span className="font-bold tracking-tight text-slate-900">Favia Health</span></button><button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="cursor-pointer rounded-lg p-2 text-slate-600 hover:bg-slate-100" aria-label="Toggle navigation">{mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button></header>
+    {mobileMenuOpen && <div className="fixed inset-x-0 top-16 z-30 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-slate-200 bg-white p-3 shadow-lg md:hidden"><nav aria-label="Mobile navigation"><p className="mb-1 px-3 text-[10px] font-bold uppercase tracking-[0.13em] text-slate-400">Today</p>{coreNav()}<button onClick={onOpenAdjustments} className="mt-1 flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold text-slate-600 hover:bg-slate-100"><CheckCircle2 className="h-4 w-4 text-emerald-600" />Safeguards <span className="text-xs font-medium text-slate-400">({totalFactors})</span></button><FutureGroups expanded={expandedGroups} onToggle={toggleGroup} /><div className="mt-4 border-t border-slate-100 pt-3"><button onClick={() => selectTab('settings')} className={`mb-1 flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold ${currentTab === 'settings' ? 'bg-teal-50 text-teal-800' : 'text-slate-700 hover:bg-slate-50'}`}><Settings className="h-4 w-4" />Settings</button><button onClick={() => selectTab('pricing')} className={`mb-1 flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold ${currentTab === 'pricing' ? 'bg-teal-50 text-teal-800' : 'text-slate-700 hover:bg-slate-50'}`}><CreditCard className="h-4 w-4" />Pricing</button><button onClick={() => selectTab('profile')} className={`flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold ${currentTab === 'profile' ? 'bg-teal-50 text-teal-800' : 'text-slate-700 hover:bg-slate-50'}`}><CircleUserRound className="h-4 w-4" />Profile</button></div></nav></div>}
   </>;
 };

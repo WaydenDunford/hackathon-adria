@@ -1,4 +1,4 @@
-export type NavTab = 'dashboard' | 'meals' | 'workouts' | 'profile' | 'pricing';
+export type NavTab = 'dashboard' | 'meals' | 'workouts' | 'profile' | 'pricing' | 'settings';
 
 export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 
