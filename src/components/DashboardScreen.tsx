@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { HealthProfileState, NavTab, EvidenceCitation } from '../types';
 import {
   ShieldCheck,
@@ -23,52 +23,163 @@ interface DashboardScreenProps {
   onOpenAdjustments: () => void;
 }
 
+const healthFacts = [
+  {
+    fact: 'Active muscles can take up glucose during exercise, even when less insulin is available.',
+    condition: 'Type 1 Diabetes',
+    source: 'American Diabetes Association',
+    sourceUrl: 'https://diabetes.org/health-wellness/fitness/blood-glucose-and-exercise',
+  },
+  {
+    fact: 'Physical activity can increase insulin sensitivity for 24 hours or more after a workout.',
+    condition: 'Type 1 Diabetes',
+    source: 'American Diabetes Association',
+    sourceUrl: 'https://diabetes.org/health-wellness/fitness/blood-glucose-and-exercise',
+  },
+  {
+    fact: 'Regular activity can help lower A1C over time, alongside an individualized diabetes plan.',
+    condition: 'Type 1 Diabetes',
+    source: 'American Diabetes Association',
+    sourceUrl: 'https://diabetes.org/health-wellness/fitness/blood-glucose-and-exercise',
+  },
+  {
+    fact: 'Aerobic and resistance exercise both support cardiovascular health and insulin sensitivity.',
+    condition: 'Type 1 Diabetes',
+    source: 'American Diabetes Association',
+    sourceUrl: 'https://diabetes.org/health-wellness/fitness/anaerobic-exercise-diabetes',
+  },
+  {
+    fact: 'Learning your own glucose response to different activities helps make exercise safer and more predictable.',
+    condition: 'Type 1 Diabetes',
+    source: 'American Diabetes Association',
+    sourceUrl: 'https://diabetes.org/health-wellness/fitness/exercise-and-type-1',
+  },
+  {
+    fact: 'Being active can support heart health, mood, and sleep for people living with type 1 diabetes.',
+    condition: 'Type 1 Diabetes',
+    source: 'American Diabetes Association',
+    sourceUrl: 'https://professional.diabetes.org/sites/dpro/files/2026-06/guide-for-people-with-type_1-diabetes.pdf',
+  },
+  {
+    fact: 'For non-specific low-back pain, physical therapy can improve strength, movement, and return to activity.',
+    condition: 'Lower-Back Problems',
+    source: 'World Health Organization',
+    sourceUrl: 'https://www.who.int/news-room/fact-sheets/detail/low-back-pain',
+  },
+  {
+    fact: 'Staying physically active is one of the self-care strategies that can help reduce symptoms and future episodes of non-specific low-back pain.',
+    condition: 'Lower-Back Problems',
+    source: 'World Health Organization',
+    sourceUrl: 'https://www.who.int/news-room/fact-sheets/detail/low-back-pain',
+  },
+  {
+    fact: 'Low physical activity is a risk factor for non-specific low-back pain, so gradual movement can be part of recovery.',
+    condition: 'Lower-Back Problems',
+    source: 'World Health Organization',
+    sourceUrl: 'https://www.who.int/news-room/fact-sheets/detail/low-back-pain',
+  },
+  {
+    fact: 'Low-back rehabilitation aims to help people return to meaningful daily activities while improving function.',
+    condition: 'Lower-Back Problems',
+    source: 'World Health Organization',
+    sourceUrl: 'https://www.who.int/news-room/fact-sheets/detail/low-back-pain',
+  },
+  {
+    fact: 'Exercise can be adapted by reducing duration, frequency, or intensity when symptoms need a gentler approach.',
+    condition: 'Lower-Back Problems',
+    source: 'Centers for Disease Control and Prevention',
+    sourceUrl: 'https://archive.cdc.gov/www_cdc_gov/arthritis/basics/physical-activity/pain.html',
+  },
+  {
+    fact: 'Untreated celiac disease can affect nutrient absorption, so protecting bone health is an important part of care.',
+    condition: 'Celiac Disease',
+    source: 'National Institute of Diabetes and Digestive and Kidney Diseases',
+    sourceUrl: 'https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/treatment',
+  },
+  {
+    fact: 'Regular physical activity helps strengthen bones and muscles, a useful complement to celiac disease follow-up care.',
+    condition: 'Celiac Disease',
+    source: 'Centers for Disease Control and Prevention',
+    sourceUrl: 'https://www.cdc.gov/physical-activity-basics/health-benefits/adults.html',
+  },
+  {
+    fact: 'Physical activity can improve sleep quality and reduce anxiety—whole-health benefits alongside celiac disease treatment.',
+    condition: 'Celiac Disease',
+    source: 'Centers for Disease Control and Prevention',
+    sourceUrl: 'https://www.cdc.gov/physical-activity-basics/health-benefits/adults.html',
+  },
+  {
+    fact: 'Exercise supports general health, but a strict gluten-free diet remains the treatment for celiac disease.',
+    condition: 'Celiac Disease',
+    source: 'National Institute of Diabetes and Digestive and Kidney Diseases',
+    sourceUrl: 'https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/treatment',
+  },
+];
+
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   healthProfile,
   onNavigate,
   onOpenAdjustments,
 }) => {
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const [healthFact] = useState(() => healthFacts[Math.floor(Math.random() * healthFacts.length)]);
+
   return (
     <div className="space-y-8 animate-fade-in pb-12">
       {/* 1. Header Section */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-teal-950 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-teal-950 rounded-3xl px-6 py-8 sm:px-8 text-white shadow-md relative overflow-hidden">
         {/* Subtle decorative background glow */}
         <div className="absolute -right-12 -top-12 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -left-12 -bottom-12 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-400/10 border border-teal-400/20 text-teal-300 text-xs font-semibold mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-teal-300" />
-            <span>Health-Aware Planning Engine Active</span>
+        <div className="relative z-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-center lg:gap-8">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-400/10 border border-teal-400/20 text-teal-300 text-xs font-semibold mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-teal-300" />
+              <span>Health-Aware Planning Engine Active</span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+              {greeting}, Amina
+            </h1>
+
+            <div className="flex flex-wrap items-center gap-3 mt-6">
+              <button
+                id="dashboard-view-plan-btn"
+                onClick={() => onNavigate('meals')}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm transition-all shadow-sm hover:shadow-md cursor-pointer"
+              >
+                <span>View My Plan</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                id="dashboard-see-adjustments-hero-btn"
+                onClick={onOpenAdjustments}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-semibold text-sm transition-colors cursor-pointer"
+              >
+                <ShieldCheck className="w-4 h-4 text-teal-300" />
+                <span>Safety Audit Overview</span>
+              </button>
+            </div>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-2">
-            Good morning, Sarah
-          </h1>
-
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
-            Your current plan is personalized around your active health profile — safeguarding blood sugar stability, gut integrity, allergen safety, and spinal protection.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              id="dashboard-view-plan-btn"
-              onClick={() => onNavigate('meals')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm transition-all shadow-sm hover:shadow-md cursor-pointer"
+          <aside className="w-full max-w-sm rounded-2xl border border-teal-300/20 bg-slate-950/20 px-5 py-5 text-center lg:max-w-none">
+            <div className="flex items-center justify-center gap-2 text-teal-300 text-xs font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Did you know?</span>
+            </div>
+            <p className="mt-2 text-sm leading-relaxed text-slate-100">{healthFact.fact}</p>
+            <a
+              href={healthFact.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-block text-xs font-medium text-teal-300 hover:text-teal-200 underline underline-offset-2"
             >
-              <span>View My Plan</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-
-            <button
-              id="dashboard-see-adjustments-hero-btn"
-              onClick={onOpenAdjustments}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-semibold text-sm transition-colors cursor-pointer"
-            >
-              <ShieldCheck className="w-4 h-4 text-teal-300" />
-              <span>Safety Audit Overview</span>
-            </button>
-          </div>
+              Source: {healthFact.source}
+            </a>
+          </aside>
         </div>
       </div>
 
@@ -176,19 +287,17 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs flex flex-col justify-between hover:border-teal-300 transition-colors"
           >
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200/60 flex items-center justify-center text-teal-700">
-                  <Utensils className="w-5 h-5" />
+              <div className="flex items-center justify-between gap-3 mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200/60 flex items-center justify-center text-teal-700">
+                    <Utensils className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900">Meal Plan</h3>
                 </div>
                 <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200/60">
                   7-Day Plan
                 </span>
               </div>
-
-              <h3 className="text-xl font-bold text-slate-900 mb-1">Meal Plan</h3>
-              <p className="text-xs text-slate-500 mb-5">
-                Anti-inflammatory, glycemic-balanced nutrition supporting daily stability.
-              </p>
 
               {/* Key Specs */}
               <div className="grid grid-cols-3 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200/60 mb-5">
@@ -250,19 +359,17 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs flex flex-col justify-between hover:border-teal-300 transition-colors"
           >
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200/60 flex items-center justify-center text-teal-700">
-                  <Dumbbell className="w-5 h-5" />
+              <div className="flex items-center justify-between gap-3 mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200/60 flex items-center justify-center text-teal-700">
+                    <Dumbbell className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900">Workout Plan</h3>
                 </div>
                 <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200/60">
                   3 Workouts / Week
                 </span>
               </div>
-
-              <h3 className="text-xl font-bold text-slate-900 mb-1">Workout Plan</h3>
-              <p className="text-xs text-slate-500 mb-5">
-                Targeted strength and functional fitness adapted to lower-back biomechanics.
-              </p>
 
               {/* Key Specs */}
               <div className="grid grid-cols-3 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200/60 mb-5">

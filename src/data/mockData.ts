@@ -1061,7 +1061,6 @@ export const sampleWorkouts: WorkoutDay[] = [
     estimatedDuration: '45 mins',
     intensity: 'Moderate-High',
     muscleGroups: ['Quadriceps', 'Glutes', 'Upper Back', 'Core', 'Shoulders'],
-    description: 'A balanced full-body resistance session prioritizing vertical spinal decompression, anti-rotation core control, and low lumbar shearing force.',
     exercises: [
       {
         id: 'ex-a1',
@@ -1138,7 +1137,6 @@ export const sampleWorkouts: WorkoutDay[] = [
     estimatedDuration: '40 mins',
     intensity: 'Moderate',
     muscleGroups: ['Hamstrings', 'Glutes', 'Lats', 'Abdominals'],
-    description: 'Designed to strengthen the posterior kinetic chain without spinal shear, reinforcing pelvic alignment and metabolic glucose clearing.',
     exercises: [
       {
         id: 'ex-b1',
@@ -1201,7 +1199,6 @@ export const sampleWorkouts: WorkoutDay[] = [
     estimatedDuration: '40 mins',
     intensity: 'Moderate',
     muscleGroups: ['Chest', 'Upper Back', 'Arms', 'Spinal Mobility'],
-    description: 'Focused on postural restoration, shoulder girdle strength, and safe cardiovascular metabolic stimulus without lumbar strain.',
     exercises: [
       {
         id: 'ex-c1',
