@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { HealthProfileState, NavTab, EvidenceCitation } from '../types';
+import { DailyCheckIn, HealthProfileState, NavTab, EvidenceCitation } from '../types';
+import { DailyCheckInCard } from './DailyCheckInCard';
 import {
   ShieldCheck,
   CheckCircle2,
@@ -20,6 +21,8 @@ import {
 interface DashboardScreenProps {
   healthProfile: HealthProfileState;
   userName: string;
+  dailyCheckIn: DailyCheckIn | null;
+  onSaveDailyCheckIn: (draft: Omit<DailyCheckIn, 'date' | 'completedAt' | 'planAdjusted' | 'adjustmentSummary'>) => void;
   onNavigate: (tab: NavTab) => void;
   onOpenAdjustments: () => void;
 }
@@ -120,6 +123,8 @@ const healthFacts = [
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   healthProfile,
   userName,
+  dailyCheckIn,
+  onSaveDailyCheckIn,
   onNavigate,
   onOpenAdjustments,
 }) => {
@@ -184,6 +189,12 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           </aside>
         </div>
       </div>
+
+      <DailyCheckInCard
+        checkIn={dailyCheckIn}
+        onSave={onSaveDailyCheckIn}
+        onViewPlan={() => onNavigate('workouts')}
+      />
 
       {/* 2. Health Profile Summary Card */}
       <div

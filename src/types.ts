@@ -54,6 +54,16 @@ export interface Exercise {
   whyThisExercise: string;
   evidence: EvidenceCitation;
   t1dSafetyNote?: string;
+  dailyAdjustmentReason?: string;
+}
+
+export type ExerciseVisualKind = 'squat' | 'row' | 'bench-press' | 'core' | 'shoulder-press' | 'hip-thrust' | 'pulldown' | 'carry' | 'push-up' | 'face-pull' | 'bird-dog';
+
+export interface ExerciseInstructionVisual {
+  startLabel: string;
+  finishLabel: string;
+  targetMuscles: string[];
+  kind: ExerciseVisualKind;
 }
 
 export interface WorkoutDay {
@@ -71,4 +81,20 @@ export interface HealthProfileState {
   allergies: string[];
   dietaryPreferences: string[];
   physicalLimitations: string[];
+}
+
+export type DailyEnergy = 'lower' | 'same' | 'higher';
+export type DailyPain = 'none' | 'mild' | 'moderate' | 'significant';
+export type DailyRecovery = 'poor' | 'okay' | 'well';
+
+export interface DailyCheckIn {
+  date: string;
+  completedAt: string;
+  energy: DailyEnergy;
+  pain: DailyPain;
+  affectedAreas: string[];
+  recovery: DailyRecovery;
+  note: string;
+  planAdjusted: boolean;
+  adjustmentSummary: string[];
 }
