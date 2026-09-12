@@ -175,7 +175,7 @@ export const HealthAdjustmentsModal: React.FC<HealthAdjustmentsModalProps> = ({
           <div className="p-3.5 rounded-xl bg-slate-100/70 border border-slate-200 text-xs text-slate-600 flex items-start gap-2.5">
             <CheckCircle2 className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
             <p>
-              <strong className="text-slate-800">Targeted Precision:</strong> 15 of 18 exercises remained completely unmodified (e.g. Dumbbell Bench Press, Seated Shoulder Press). CuraHealth only alters movements where clinical biomechanics warrant safety interventions.
+              <strong className="text-slate-800">Targeted Precision:</strong> 15 of 18 exercises remained completely unmodified (e.g. Dumbbell Bench Press, Seated Shoulder Press). Favia Health only alters movements where clinical biomechanics warrant safety interventions.
             </p>
           </div>
         </div>

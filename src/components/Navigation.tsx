@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavTab, HealthProfileState } from '../types';
-import { ShieldCheck, Activity, Menu, X, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Activity, Menu, X, CheckCircle2, ChevronRight } from 'lucide-react';
 
 interface NavigationProps {
   currentTab: NavTab;
@@ -33,27 +33,16 @@ export const Navigation: React.FC<NavigationProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        {/* Logo and Brand */}
         <div className="flex items-center gap-3">
           <button
             id="brand-logo-btn"
             onClick={() => onSelectTab('dashboard')}
             className="flex items-center gap-2.5 text-left group focus:outline-none"
           >
-            <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-xs group-hover:bg-teal-700 transition-colors">
-              <ShieldCheck className="w-5 h-5 text-white" />
+            <div className="h-10 w-10 overflow-hidden rounded-xl border border-teal-100 bg-white shadow-xs transition-transform group-hover:scale-105">
+              <img src="/favia-health-favicon.png" alt="Favia Health" className="h-full w-full object-cover" />
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-lg tracking-tight text-slate-900">CuraHealth</span>
-                <span className="text-[11px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-200/60">
-                  Investor Demo
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 hidden sm:block">
-                Health-Aware Nutrition &amp; Movement
-              </p>
-            </div>
+            <span className="font-bold text-lg tracking-tight text-slate-900">Favia Health</span>
           </button>
         </div>
 

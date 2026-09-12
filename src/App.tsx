@@ -81,6 +81,19 @@ export default function App() {
     });
   };
 
+  const handleAddSnack = (day: DayOfWeek, snack: Meal) => {
+    setWeeklyMeals((prev) => ({
+      ...prev,
+      [day]: [
+        ...(prev[day] || []),
+        {
+          ...snack,
+          id: `${day.toLowerCase()}-snack-${Date.now()}`,
+        },
+      ],
+    }));
+  };
+
   // Handle saving health profile
   const handleSaveProfile = (updatedProfile: HealthProfileState) => {
     setHealthProfile(updatedProfile);
@@ -113,6 +126,7 @@ export default function App() {
             onSelectDay={setSelectedDay}
             onOpenEvidence={setActiveEvidence}
             onOpenSwapMeal={(meal, day) => setSwapModalMeal({ meal, day })}
+            onAddSnack={handleAddSnack}
           />
         )}
 
@@ -174,14 +188,14 @@ export default function App() {
         }}
       />
 
-      {/* Subtle Investor Demo Footer */}
+      {/* Application footer */}
       <footer className="border-t border-slate-200 bg-white/70 py-6 mt-auto">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+        <div className="hidden">
           <div className="flex items-center gap-2">
             <div className="w-5 h-5 rounded-md bg-teal-600 flex items-center justify-center text-white">
               <ShieldCheck className="w-3 h-3" />
             </div>
-            <span className="font-semibold text-slate-800">CuraHealth</span>
+            <span className="font-semibold text-slate-800">Favia Health</span>
             <span>— Health-Aware Personalized Nutrition &amp; Movement Prototype</span>
           </div>
 
@@ -195,6 +209,9 @@ export default function App() {
               Audit Log
             </button>
           </div>
+        </div>
+        <div className="mx-auto flex max-w-6xl justify-end px-4 text-xs text-slate-500 sm:px-6">
+          <span><strong className="text-slate-800">Favia Health</strong> · All rights reserved</span>
         </div>
       </footer>
     </div>

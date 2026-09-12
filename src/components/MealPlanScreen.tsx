@@ -1,20 +1,8 @@
 import React, { useState } from 'react';
-import { DayOfWeek, Meal, EvidenceCitation } from '../types';
+import { DayOfWeek, EvidenceCitation, Meal } from '../types';
 import {
-  Calendar,
-  ChevronDown,
-  ChevronUp,
-  ChevronLeft,
-  ChevronRight,
-  RefreshCw,
-  ShieldCheck,
-  Wheat,
-  Nut,
-  Activity,
-  CheckCircle2,
-  Info,
-  Utensils,
-  Sparkles
+  Activity, ChevronDown, ChevronUp, CircleGauge, Flame, Info, Nut,
+  RefreshCw, ShieldCheck, Utensils, Wheat, X
 } from 'lucide-react';
 
 interface MealPlanScreenProps {
@@ -23,542 +11,178 @@ interface MealPlanScreenProps {
   onSelectDay: (day: DayOfWeek) => void;
   onOpenEvidence: (evidence: EvidenceCitation) => void;
   onOpenSwapMeal: (meal: Meal, day: string) => void;
+  onAddSnack: (day: DayOfWeek, snack: Meal) => void;
 }
 
-type MealSlotType = 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack';
+const days: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+const mealBenefits = (meal: Meal) => meal.whyThisMeal || meal.healthRelevance[0]?.explanation;
+const getToday = () => days[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
+const recipeForOneServing = (meal: Meal) => {
+  const portions = meal.type === 'Breakfast'
+    ? ['1 cup', '½ cup', '2 tbsp', '1 tsp']
+    : meal.type === 'Lunch'
+      ? ['140 g', '¾ cup', '1 cup', '1 tbsp']
+      : meal.type === 'Dinner'
+        ? ['160 g', '200 g', '1 cup', '1 tbsp']
+        : ['170 g', '¼ cup', '2 tbsp', '1 tsp'];
+  return meal.ingredientsSummary.split(',').slice(0, 4).map((ingredient, index) => ({
+    ingredient: ingredient.trim(),
+    amount: portions[index],
+  }));
+};
 
 export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
-  weeklyMeals,
-  selectedDay,
-  onSelectDay,
-  onOpenEvidence,
-  onOpenSwapMeal,
+  weeklyMeals, selectedDay, onSelectDay, onOpenEvidence, onOpenSwapMeal,
 }) => {
-  const days: DayOfWeek[] = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
+  const [openMeal, setOpenMeal] = useState<Meal | null>(null);
+  const [isWhyOpen, setIsWhyOpen] = useState(true);
+  const [isHealthOpen, setIsHealthOpen] = useState(true);
+  const today = getToday();
+  const meals = weeklyMeals[selectedDay] || [];
+  const dayCalories = meals.reduce((total, meal) => total + meal.calories, 0);
 
-  const mealSlots: MealSlotType[] = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
-
-  // Track the chosen meal slot to display (Breakfast, Lunch, Dinner, Snack)
-  const [selectedMealType, setSelectedMealType] = useState<MealSlotType>('Breakfast');
-
-  // Track whether "Relevant to your health" is expanded for the current meal
-  const [isHealthExpanded, setIsHealthExpanded] = useState<boolean>(true);
-
-  // Track "Why this meal?" accordion
-  const [isWhyExpanded, setIsWhyExpanded] = useState<boolean>(true);
-
-  // Get meals for selected day
-  const currentDayMeals = weeklyMeals[selectedDay] || [];
-
-  // Compute daily totals for the currently selected day
-  const totalCalories = currentDayMeals.reduce((acc, m) => acc + m.calories, 0);
-  const totalProtein = currentDayMeals.reduce((acc, m) => acc + m.protein, 0);
-  const totalCarbs = currentDayMeals.reduce((acc, m) => acc + m.carbs, 0);
-  const totalFat = currentDayMeals.reduce((acc, m) => acc + m.fat, 0);
-
-  // Find the single chosen meal to display
-  const selectedMeal =
-    currentDayMeals.find((m) => m.type === selectedMealType) || currentDayMeals[0];
-
-  // Helper to step through meals linearly (Previous / Next)
-  const allOrderedSlots: { day: DayOfWeek; slot: MealSlotType }[] = [];
-  days.forEach((d) => {
-    mealSlots.forEach((s) => {
-      allOrderedSlots.push({ day: d, slot: s });
-    });
-  });
-
-  const currentIndex = allOrderedSlots.findIndex(
-    (item) => item.day === selectedDay && item.slot === selectedMealType
-  );
-
-  const handlePrevMeal = () => {
-    if (currentIndex > 0) {
-      const prev = allOrderedSlots[currentIndex - 1];
-      onSelectDay(prev.day);
-      setSelectedMealType(prev.slot);
-    }
+  const openDetails = (meal: Meal) => {
+    setOpenMeal(meal);
+    setIsWhyOpen(true);
+    setIsHealthOpen(true);
   };
 
-  const handleNextMeal = () => {
-    if (currentIndex < allOrderedSlots.length - 1) {
-      const next = allOrderedSlots[currentIndex + 1];
-      onSelectDay(next.day);
-      setSelectedMealType(next.slot);
-    }
-  };
-
-  // Helper for placeholder meal visuals with gradients and food icons
-  const getMealVisual = (type: MealSlotType) => {
-    const visualStyles = {
-      Breakfast: {
-        gradient: 'from-amber-100 via-orange-50 to-amber-50 text-amber-800 border-amber-200/80',
-        badge: 'bg-amber-100/90 text-amber-900 border-amber-300',
-        label: 'Morning Fuel',
-      },
-      Lunch: {
-        gradient: 'from-teal-100 via-emerald-50 to-teal-50 text-teal-800 border-teal-200/80',
-        badge: 'bg-teal-100/90 text-teal-900 border-teal-300',
-        label: 'Midday Stability',
-      },
-      Dinner: {
-        gradient: 'from-sky-100 via-indigo-50 to-sky-50 text-sky-800 border-sky-200/80',
-        badge: 'bg-sky-100/90 text-sky-900 border-sky-300',
-        label: 'Evening Recovery',
-      },
-      Snack: {
-        gradient: 'from-emerald-100 via-teal-50 to-emerald-50 text-emerald-800 border-emerald-200/80',
-        badge: 'bg-emerald-100/90 text-emerald-900 border-emerald-300',
-        label: 'Glycemic Buffer',
-      },
-    };
-
-    const style = visualStyles[type] || visualStyles.Breakfast;
-
-    return (
-      <div
-        className={`w-full h-44 sm:h-48 rounded-2xl bg-gradient-to-br ${style.gradient} border p-4 flex flex-col justify-between relative overflow-hidden shadow-2xs`}
-      >
-        <div className="flex items-center justify-between z-10">
-          <span
-            className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border shadow-2xs ${style.badge}`}
-          >
-            {type}
-          </span>
-          <span className="text-[11px] font-semibold text-slate-600 bg-white/80 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-slate-200/60 shadow-2xs">
-            {style.label}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3 z-10">
-          <div className="w-12 h-12 rounded-xl bg-white/95 shadow-sm border border-slate-200/70 flex items-center justify-center text-slate-800">
-            <Utensils className="w-6 h-6 text-slate-800" />
-          </div>
-          <div>
-            <span className="text-xs font-bold text-slate-800 block">
-              Certified Safe &amp; Audited
-            </span>
-            <span className="text-[11px] text-slate-600">
-              Zero Gluten • Zero Peanuts • Carb Counted
-            </span>
-          </div>
-        </div>
-
-        {/* Decorative corner ring */}
-        <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/30 pointer-events-none" />
-      </div>
-    );
+  const iconForHealth = (type: Meal['healthRelevance'][number]['iconType']) => {
+    if (type === 't1d') return Activity;
+    if (type === 'celiac') return Wheat;
+    if (type === 'allergy') return Nut;
+    return ShieldCheck;
   };
 
   return (
     <div className="space-y-6 animate-fade-in pb-12">
-      {/* Top Banner: Title without description beneath as requested */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-            7-Day Health-Aware Meal Plan
-          </h1>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-teal-700">Your weekly menu</p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">7-Day Health-Aware Meal Plan</h1>
         </div>
-
-        {/* Daily Nutrition Tally Pill */}
-        <div className="inline-flex items-center gap-3 bg-white border border-slate-200 rounded-2xl px-4 py-2 shadow-2xs self-start sm:self-auto text-xs">
-          <div>
-            <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
-              {selectedDay} Total
-            </span>
-            <span className="font-extrabold text-slate-900 text-sm">{totalCalories} kcal</span>
-          </div>
-          <div className="h-6 w-px bg-slate-200" />
-          <div>
-            <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
-              Carbs (T1D)
-            </span>
-            <span className="font-extrabold text-teal-700 text-sm">{totalCarbs}g</span>
-          </div>
-          <div className="h-6 w-px bg-slate-200" />
-          <div>
-            <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
-              Protein
-            </span>
-            <span className="font-bold text-slate-800 text-sm">{totalProtein}g</span>
-          </div>
+        <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600">
+          {selectedDay}: <strong className="text-slate-900">{dayCalories} kcal planned</strong>
         </div>
-      </div>
+      </header>
 
-      {/* Main Split Layout: Left side Calendar/Table Selector, Right side Selected Meal */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT COLUMN: Calendar / Table Meal Plan Selector */}
-        <div className="lg:col-span-5 space-y-4">
-          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 sm:p-5">
-            <div className="flex items-center justify-between mb-3.5">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-teal-600" />
-                <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                  Weekly Schedule
-                </h2>
-              </div>
-              <span className="text-[11px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-100">
-                Click any meal to view
-              </span>
-            </div>
-
-            {/* Calendar Table Matrix: Days as columns, Daily meals as rows */}
-            <div className="overflow-x-auto -mx-1 sm:mx-0">
-              <table
-                id="meal-calendar-table"
-                className="w-full text-xs border-collapse min-w-[340px]"
-              >
-                <thead>
-                  <tr>
-                    <th className="p-1.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-200 w-16">
-                      Meal
-                    </th>
-                    {days.map((day) => {
-                      const isDaySelected = selectedDay === day;
-                      return (
-                        <th
-                          key={day}
-                          className={`p-1.5 text-center text-[10px] font-bold uppercase tracking-wider border-b border-slate-200 transition-colors ${
-                            isDaySelected
-                              ? 'text-teal-700 bg-teal-50/70 rounded-t-lg'
-                              : 'text-slate-500'
-                          }`}
-                        >
-                          <span className="hidden sm:inline">{day.substring(0, 3)}</span>
-                          <span className="sm:hidden">{day.substring(0, 1)}</span>
-                        </th>
-                      );
-                    })}
-                  </tr>
-                </thead>
-                <tbody>
-                  {mealSlots.map((slot) => (
-                    <tr key={slot} className="border-b border-slate-100 last:border-b-0">
-                      {/* Row Header: Meal Type */}
-                      <td className="py-2.5 pr-1.5 pl-1 font-bold text-slate-700 text-[11px] whitespace-nowrap">
-                        {slot}
-                      </td>
-
-                      {/* Day Columns */}
-                      {days.map((day) => {
-                        const dayMeals = weeklyMeals[day] || [];
-                        const cellMeal = dayMeals.find((m) => m.type === slot);
-                        const isCellSelected =
-                          selectedDay === day && selectedMealType === slot;
-
-                        return (
-                          <td key={day} className="p-1 text-center">
-                            <button
-                              id={`cell-${day.toLowerCase()}-${slot.toLowerCase()}`}
-                              onClick={() => {
-                                onSelectDay(day);
-                                setSelectedMealType(slot);
-                              }}
-                              title={`${day} ${slot}: ${cellMeal?.name || ''} (${cellMeal?.carbs || 0}g carbs, ${cellMeal?.calories || 0} kcal)`}
-                              className={`w-full py-2 px-1 rounded-xl text-center transition-all cursor-pointer flex flex-col items-center justify-center ${
-                                isCellSelected
-                                  ? 'bg-teal-600 text-white font-bold shadow-xs ring-2 ring-teal-500/30'
-                                  : 'bg-slate-50/80 hover:bg-teal-50 text-slate-700 border border-slate-200/70 hover:border-teal-300'
-                              }`}
-                            >
-                              <span
-                                className={`text-[10px] font-extrabold leading-tight ${
-                                  isCellSelected ? 'text-white' : 'text-teal-900'
-                                }`}
-                              >
-                                {cellMeal?.carbs}g
-                              </span>
-                              <span
-                                className={`text-[9px] leading-tight ${
-                                  isCellSelected ? 'text-teal-100' : 'text-slate-400'
-                                }`}
-                              >
-                                {cellMeal?.calories}k
-                              </span>
-                            </button>
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Quick Summary of Active Day */}
-            <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-600">
-                Viewing: <strong className="text-slate-900">{selectedDay} • {selectedMealType}</strong>
-              </span>
-              <span className="text-[11px] text-slate-400">
-                Cell values: Carbs / kcal
-              </span>
-            </div>
-          </div>
-
-          {/* Quick Slot Filter Buttons */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-3 shadow-2xs">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">
-              Jump to meal slot for {selectedDay}:
-            </div>
-            <div className="grid grid-cols-4 gap-1.5">
-              {mealSlots.map((slot) => {
-                const isSelected = selectedMealType === slot;
-                return (
-                  <button
-                    key={slot}
-                    id={`quick-slot-btn-${slot.toLowerCase()}`}
-                    onClick={() => setSelectedMealType(slot)}
-                    className={`py-1.5 px-2 rounded-xl text-xs font-semibold transition-all text-center cursor-pointer ${
-                      isSelected
-                        ? 'bg-teal-600 text-white shadow-2xs font-bold'
-                        : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200/60'
-                    }`}
-                  >
-                    {slot}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: Show JUST THAT MEAL in full comprehensive detail */}
-        <div className="lg:col-span-7">
-          {selectedMeal && (
-            <div
-              id={`active-meal-detail-card-${selectedMeal.id}`}
-              className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-5 sm:p-7 space-y-5 transition-all"
+      <section aria-label="Choose a day" className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
+        {days.map((day) => {
+          const active = day === selectedDay;
+          const isToday = day === today;
+          const total = (weeklyMeals[day] || []).reduce((sum, meal) => sum + meal.calories, 0);
+          return (
+            <button
+              key={day}
+              onClick={() => onSelectDay(day)}
+              className={`cursor-pointer rounded-2xl border p-3 text-left transition-all ${
+                active
+                  ? 'border-teal-500 bg-white shadow-md ring-2 ring-teal-500/15'
+                  : 'border-slate-200 bg-white/80 hover:border-slate-300 hover:bg-white'
+              }`}
             >
-              {/* Card Header & Pagination Controls */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-lg bg-teal-50 text-teal-800 border border-teal-200 text-xs font-bold uppercase tracking-wider">
-                    {selectedDay}
-                  </span>
-                  <span className="text-slate-300">•</span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                    {selectedMeal.type}
-                  </span>
-                </div>
-
-                {/* Prev / Next linear step buttons */}
-                <div className="flex items-center gap-1.5">
-                  <button
-                    id="btn-prev-meal"
-                    onClick={handlePrevMeal}
-                    disabled={currentIndex === 0}
-                    className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                    title="Previous meal"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <span className="text-[11px] font-semibold text-slate-400 px-1">
-                    {currentIndex + 1} of {allOrderedSlots.length}
-                  </span>
-                  <button
-                    id="btn-next-meal"
-                    onClick={handleNextMeal}
-                    disabled={currentIndex === allOrderedSlots.length - 1}
-                    className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                    title="Next meal"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
+              <div className="flex items-center justify-between gap-1">
+                <span className={`text-xs font-bold ${active ? 'text-teal-800' : 'text-slate-800'}`}>{day}</span>
+                {isToday && <span className="rounded-full bg-teal-600 px-1.5 py-0.5 text-[9px] font-bold uppercase text-white">Today</span>}
               </div>
+              <span className="mt-1 block text-[11px] text-slate-500">{(weeklyMeals[day] || []).length} meals · {total} kcal</span>
+            </button>
+          );
+        })}
+      </section>
 
-              {/* Meal Graphic Banner */}
-              {getMealVisual(selectedMeal.type as MealSlotType)}
-
-              {/* Meal Title & Subtitle */}
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
-                  {selectedMeal.name}
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
-                  {selectedMeal.subtitle}
-                </p>
-              </div>
-
-              {/* Nutrition Macros Bar */}
-              <div className="grid grid-cols-4 gap-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-200/70 text-center">
-                <div className="py-1">
-                  <span className="block text-[10px] uppercase font-bold text-slate-400">
-                    Calories
-                  </span>
-                  <span className="text-sm sm:text-base font-extrabold text-slate-900">
-                    {selectedMeal.calories}
-                  </span>
-                </div>
-
-                <div className="py-1 bg-teal-50 rounded-xl border border-teal-200/80 shadow-2xs">
-                  <span className="block text-[10px] uppercase font-bold text-teal-700">
-                    Carbs (T1D)
-                  </span>
-                  <span className="text-sm sm:text-base font-black text-teal-950">
-                    {selectedMeal.carbs}g
-                  </span>
-                </div>
-
-                <div className="py-1">
-                  <span className="block text-[10px] uppercase font-bold text-slate-400">
-                    Protein
-                  </span>
-                  <span className="text-sm sm:text-base font-extrabold text-slate-900">
-                    {selectedMeal.protein}g
-                  </span>
-                </div>
-
-                <div className="py-1">
-                  <span className="block text-[10px] uppercase font-bold text-slate-400">
-                    Fat
-                  </span>
-                  <span className="text-sm sm:text-base font-extrabold text-slate-900">
-                    {selectedMeal.fat}g
-                  </span>
-                </div>
-              </div>
-
-              {/* Verified Health Safeguard Flags */}
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200">
-                  <Wheat className="w-3.5 h-3.5 text-amber-600" />
-                  <span>Gluten-Free (Celiac Safe)</span>
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-900 border border-emerald-200">
-                  <Nut className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Peanut-Free (Verified)</span>
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-sky-50 text-sky-900 border border-sky-200">
-                  <Activity className="w-3.5 h-3.5 text-sky-600" />
-                  <span>T1D Aware ({selectedMeal.carbs}g Carbohydrate)</span>
-                </span>
-              </div>
-
-              {/* Ingredients Summary */}
-              <div className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-200/60">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
-                  Verified Safe Ingredients:
-                </span>
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                  {selectedMeal.ingredientsSummary}
-                </p>
-              </div>
-
-              {/* "Why this meal?" - explicitly kept per instructions */}
-              <div className="border-t border-slate-100 pt-4">
-                <button
-                  id="why-this-meal-toggle-btn"
-                  onClick={() => setIsWhyExpanded(!isWhyExpanded)}
-                  className="flex items-center justify-between w-full text-left cursor-pointer group"
-                >
-                  <div className="flex items-center gap-2 text-sm font-bold text-slate-900 group-hover:text-teal-700 transition-colors">
-                    <Info className="w-4 h-4 text-teal-600" />
-                    <span>Why this meal?</span>
-                  </div>
-                  {isWhyExpanded ? (
-                    <ChevronUp className="w-4 h-4 text-slate-400" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-400" />
-                  )}
-                </button>
-
-                {isWhyExpanded && (
-                  <div className="mt-2.5 p-4 rounded-2xl bg-teal-50/70 border border-teal-200 text-xs sm:text-sm text-teal-950 leading-relaxed animate-fade-in">
-                    {selectedMeal.whyThisMeal}
-                  </div>
-                )}
-              </div>
-
-              {/* "Relevant to your health" Expandable Section */}
-              <div className="border-t border-slate-100 pt-4">
-                <button
-                  id="relevant-health-toggle-btn"
-                  onClick={() => setIsHealthExpanded(!isHealthExpanded)}
-                  className="flex items-center justify-between w-full text-left cursor-pointer group"
-                >
-                  <div className="flex items-center gap-2 text-sm font-bold text-slate-900 group-hover:text-teal-700 transition-colors">
-                    <ShieldCheck className="w-4 h-4 text-teal-600" />
-                    <span>Relevant to your health</span>
-                  </div>
-                  {isHealthExpanded ? (
-                    <ChevronUp className="w-4 h-4 text-slate-400" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-400" />
-                  )}
-                </button>
-
-                {isHealthExpanded && (
-                  <div className="mt-3 space-y-2.5 animate-fade-in">
-                    {/* T1D */}
-                    <div className="p-3.5 rounded-xl bg-sky-50/70 border border-sky-200 text-xs text-slate-700">
-                      <div className="flex items-center gap-1.5 font-bold text-sky-950 mb-1">
-                        <Activity className="w-3.5 h-3.5 text-sky-600" />
-                        <span>Type 1 Diabetes (Bolus Guidance)</span>
-                      </div>
-                      <p className="leading-relaxed">
-                        {selectedMeal.healthNotes.type1Diabetes}
-                      </p>
-                    </div>
-
-                    {/* Celiac */}
-                    <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 text-xs text-slate-700">
-                      <div className="flex items-center gap-1.5 font-bold text-amber-950 mb-1">
-                        <Wheat className="w-3.5 h-3.5 text-amber-600" />
-                        <span>Celiac Disease (Gluten Exclusion)</span>
-                      </div>
-                      <p className="leading-relaxed">
-                        {selectedMeal.healthNotes.celiac}
-                      </p>
-                    </div>
-
-                    {/* Peanut Allergy */}
-                    <div className="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs text-slate-700">
-                      <div className="flex items-center gap-1.5 font-bold text-emerald-950 mb-1">
-                        <Nut className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Peanut Allergy (Cross-Contact Safeguard)</span>
-                      </div>
-                      <p className="leading-relaxed">
-                        {selectedMeal.healthNotes.peanutAllergy}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Action Buttons: Swap Meal & View Evidence */}
-              <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <button
-                  id={`btn-swap-meal-${selectedMeal.id}`}
-                  onClick={() => onOpenSwapMeal(selectedMeal, selectedDay)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-colors cursor-pointer"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  <span>Swap meal</span>
-                </button>
-
-                <button
-                  id={`btn-evidence-meal-${selectedMeal.id}`}
-                  onClick={() => onOpenEvidence(selectedMeal.evidence)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 font-semibold text-xs transition-colors cursor-pointer"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
-                  <span>View clinical evidence</span>
-                </button>
-              </div>
-            </div>
-          )}
+      <section className="space-y-8">
+        <div className="flex items-center justify-between px-1">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-600">{selectedDay}'s meals</h2>
         </div>
-      </div>
+
+        {meals.map((meal) => (
+          <article
+            key={meal.id}
+            onClick={() => openDetails(meal)}
+            className="relative grid cursor-pointer overflow-visible rounded-3xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md md:grid-cols-[1.2fr_0.7fr_1fr]"
+          >
+            <span className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 shadow-sm">{meal.type}</span>
+            <section className="flex min-h-56 flex-col p-5 sm:p-6">
+              <button onClick={(event) => { event.stopPropagation(); openDetails(meal); }} className="cursor-pointer text-center text-lg font-bold leading-snug text-slate-900 hover:text-teal-700 sm:text-xl">
+                {meal.name}
+              </button>
+              <div className="mt-auto pt-5">
+                <p className="text-sm leading-relaxed text-slate-600">{meal.subtitle}</p>
+                <div className="mt-4 rounded-xl border border-teal-100 bg-teal-50/60 p-3 text-xs leading-relaxed text-teal-950">
+                  <span className="mb-1 flex items-center gap-1.5 font-bold"><CircleGauge className="h-3.5 w-3.5 text-teal-600" />Benefits</span>
+                  {mealBenefits(meal)}
+                </div>
+              </div>
+            </section>
+
+            <section className="border-y border-slate-100 bg-slate-50/70 p-5 sm:p-6 md:border-x md:border-y-0">
+              <p className="mb-4 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">Macros</p>
+              <div className="grid grid-cols-2 gap-2.5">
+                {[
+                  ['Calories', meal.calories, 'kcal', Flame],
+                  ['Carbs', meal.carbs, 'g', Activity],
+                  ['Protein', meal.protein, 'g', Utensils],
+                  ['Fat', meal.fat, 'g', CircleGauge],
+                ].map(([label, amount, unit, Icon]) => {
+                  const MacroIcon = Icon as typeof Flame;
+                  return (
+                    <div key={String(label)} className="rounded-xl border border-slate-200 bg-white p-3 text-center">
+                      <MacroIcon className={`mx-auto mb-1 h-4 w-4 ${label === 'Carbs' ? 'text-teal-600' : 'text-slate-400'}`} />
+                      <span className="block text-[10px] font-bold uppercase tracking-wide text-slate-400">{label}</span>
+                      <span className="text-sm font-extrabold text-slate-900">{amount}{unit}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="flex min-h-56 flex-col p-4 sm:p-5">
+              <div>
+                <p className="mb-3 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">Recipe</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {recipeForOneServing(meal).map(({ ingredient, amount }) => (
+                    <div key={ingredient} className="rounded-xl border border-slate-200 bg-slate-50 p-2.5">
+                      <span className="block text-[10px] font-bold uppercase tracking-wide text-slate-400">{amount}</span>
+                      <span className="mt-0.5 block text-xs font-bold leading-snug text-slate-800">{ingredient}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="rounded-xl bg-slate-50 p-2.5"><span className="block text-[10px] font-bold uppercase text-slate-400">Serving size</span><span className="text-xs font-bold text-slate-800">1 balanced plate</span></div>
+                <div className="rounded-xl bg-slate-50 p-2.5"><span className="block text-[10px] font-bold uppercase text-slate-400">Preparation</span><span className="text-xs font-bold text-slate-800">15–25 min</span></div>
+              </div>
+            </section>
+          </article>
+        ))}
+      </section>
+
+      {openMeal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent p-4" onClick={() => setOpenMeal(null)}>
+          <article role="dialog" aria-modal="true" aria-label={`${openMeal.name} details`} onClick={(event) => event.stopPropagation()} className="max-h-[85dvh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-slate-200 bg-white shadow-2xl">
+            <header className="sticky top-0 z-10 flex items-start justify-between border-b border-slate-100 bg-white p-5">
+              <div><p className="text-[11px] font-bold uppercase tracking-wider text-teal-700">{selectedDay} · {openMeal.type}</p><h2 className="mt-1 text-xl font-bold text-slate-900">{openMeal.name}</h2></div>
+              <button onClick={() => setOpenMeal(null)} className="cursor-pointer rounded-xl p-2 text-slate-400 hover:bg-slate-100"><X className="h-5 w-5" /></button>
+            </header>
+            <div className="space-y-4 p-5">
+              <section className="rounded-2xl border border-teal-100 bg-teal-50/60 p-4">
+                <h3 className="flex items-center gap-2 text-sm font-bold text-teal-950"><Info className="h-4 w-4 text-teal-600" />Meal research</h3>
+                <p className="mt-1 text-sm leading-relaxed text-slate-600">This meal supports your current nutrition goals through its verified ingredients, balanced macros, and condition-aware preparation.</p>
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs font-bold text-teal-700">
+                  <a href="https://example.com/nutrition-study" target="_blank" rel="noreferrer" className="underline hover:text-teal-900">Nutrition study ↗</a>
+                  <a href="https://example.com/meal-guidance" target="_blank" rel="noreferrer" className="underline hover:text-teal-900">Meal guidance ↗</a>
+                  <a href="https://example.com/ingredient-reference" target="_blank" rel="noreferrer" className="underline hover:text-teal-900">Ingredient reference ↗</a>
+                </div>
+              </section>
+              <section className="rounded-2xl border border-slate-200"><button onClick={() => setIsWhyOpen(!isWhyOpen)} className="flex w-full cursor-pointer items-center justify-between p-4 text-left"><span className="flex items-center gap-2 text-sm font-bold"><Info className="h-4 w-4 text-teal-600" />Why this meal?</span>{isWhyOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</button>{isWhyOpen && <p className="border-t border-slate-100 p-4 text-sm leading-relaxed text-slate-600">{mealBenefits(openMeal)}</p>}</section>
+              <section className="rounded-2xl border border-slate-200"><button onClick={() => setIsHealthOpen(!isHealthOpen)} className="flex w-full cursor-pointer items-center justify-between p-4 text-left"><span className="flex items-center gap-2 text-sm font-bold"><ShieldCheck className="h-4 w-4 text-teal-600" />Relevant to your health</span>{isHealthOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</button>{isHealthOpen && <div className="space-y-2 border-t border-slate-100 p-3">{openMeal.healthRelevance.map((item) => { const Icon = iconForHealth(item.iconType); return <div key={item.condition} className="rounded-xl bg-slate-50 p-3 text-sm text-slate-600"><p className="mb-1 flex items-center gap-1.5 font-bold text-slate-900"><Icon className="h-4 w-4 text-teal-600" />{item.condition}</p>{item.explanation}</div>; })}</div>}</section>
+              <div className="flex flex-col-reverse gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-between"><button onClick={() => onOpenEvidence(openMeal.evidence)} className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-4 py-2.5 text-xs font-bold text-teal-800"><ShieldCheck className="h-4 w-4" />View clinical evidence</button><button onClick={() => onOpenSwapMeal(openMeal, selectedDay)} className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white"><RefreshCw className="h-4 w-4" />Swap meal</button></div>
+            </div>
+          </article>
+        </div>
+      )}
     </div>
   );
 };
