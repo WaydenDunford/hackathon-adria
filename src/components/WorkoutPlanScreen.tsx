@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { WorkoutDay, WorkoutDayId, Exercise, EvidenceCitation } from '../types';
 import { exerciseVisuals } from '../data/exerciseVisuals';
+import { exerciseImages } from '../data/exerciseImages';
 import { ExerciseInstructionVisual } from './ExerciseInstructionVisual';
 import {
   Dumbbell,
@@ -158,6 +159,7 @@ export const WorkoutPlanScreen: React.FC<WorkoutPlanScreenProps> = ({
         {currentWorkout.exercises.map((exercise) => {
           const isWhyExpanded = !!expandedWhyIds[exercise.id];
           const exerciseVisual = exerciseVisuals[exercise.id];
+          const exerciseImage = exerciseImages[exercise.id];
 
           return (
             <div
@@ -169,9 +171,9 @@ export const WorkoutPlanScreen: React.FC<WorkoutPlanScreenProps> = ({
                   : 'border-slate-200/90 hover:border-slate-300'
               }`}
             >
-              <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-5">
+              <div className="flex flex-col xl:flex-row xl:items-start gap-5">
                 {/* Exercise Info & Graphic */}
-                <div className="flex min-w-0 flex-1 items-start gap-4">
+                <div className="flex min-w-0 flex-1 items-start gap-4 xl:basis-[62%]">
                   {/* Icon Placeholder */}
                   <div
                     className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${
@@ -236,13 +238,38 @@ export const WorkoutPlanScreen: React.FC<WorkoutPlanScreenProps> = ({
                         <span><strong>Today’s adjustment:</strong> {exercise.dailyAdjustmentReason}</span>
                       </div>
                     )}
+
+                    {/* Expandable rationale stays with the exercise details. */}
+                    <div className="mt-3 hidden border-t border-slate-100 pt-3 xl:block">
+                      <button
+                        id={`why-exercise-toggle-${exercise.id}`}
+                        onClick={() => toggleWhy(exercise.id)}
+                        className="flex items-center gap-1.5 text-xs font-semibold text-teal-700 hover:text-teal-900"
+                      >
+                        <Info className="w-3.5 h-3.5" />
+                        <span>Why this exercise?</span>
+                        {isWhyExpanded ? <ChevronUp className="w-3.5 h-3.5 text-slate-400" /> : <ChevronDown className="w-3.5 h-3.5 text-slate-400" />}
+                      </button>
+
+                      {isWhyExpanded && (
+                        <div className="mt-2 text-xs text-slate-600 bg-slate-50/70 p-3 rounded-xl border border-slate-200/60 leading-relaxed animate-fade-in">
+                          {exercise.whyThisExercise}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
                 {/* Instructional visual and actions */}
-                <div className="w-full shrink-0 space-y-2 xl:w-72">
-                  {exerciseVisual && <ExerciseInstructionVisual visual={exerciseVisual} />}
-                  <div className="flex gap-2 border-t border-slate-100 pt-3 xl:border-t-0 xl:pt-0">
+                <div className="w-full shrink-0 space-y-2 xl:w-[38%] xl:max-w-[420px] xl:self-center">
+                  {exerciseImage ? (
+                    <img
+                      src={exerciseImage}
+                      alt={`${exercise.name} start and finish positions with activated muscles`}
+                      className="mx-auto w-full rounded-xl border border-slate-200 bg-white object-contain"
+                    />
+                  ) : exerciseVisual ? <ExerciseInstructionVisual visual={exerciseVisual} /> : null}
+                  <div className="flex gap-2 pt-1">
                     <button
                       id={`view-alt-btn-${exercise.id}`}
                       onClick={() => onOpenExerciseAlternative(exercise, currentWorkout.title)}
@@ -261,30 +288,25 @@ export const WorkoutPlanScreen: React.FC<WorkoutPlanScreenProps> = ({
                     </button>
                   </div>
                 </div>
-              </div>
 
-              {/* Expandable "Why this exercise?" */}
-              <div className="border-t border-slate-100 mt-3 pt-3">
-                <button
-                  id={`why-exercise-toggle-${exercise.id}`}
-                  onClick={() => toggleWhy(exercise.id)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-teal-700 hover:text-teal-900"
-                >
-                  <Info className="w-3.5 h-3.5" />
-                  <span>Why this exercise?</span>
-                  {isWhyExpanded ? (
-                    <ChevronUp className="w-3.5 h-3.5 text-slate-400" />
-                  ) : (
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                <div className="border-t border-slate-100 pt-3 xl:hidden">
+                  <button
+                    id={`why-exercise-toggle-mobile-${exercise.id}`}
+                    onClick={() => toggleWhy(exercise.id)}
+                    className="flex items-center gap-1.5 text-xs font-semibold text-teal-700 hover:text-teal-900"
+                  >
+                    <Info className="w-3.5 h-3.5" />
+                    <span>Why this exercise?</span>
+                    {isWhyExpanded ? <ChevronUp className="w-3.5 h-3.5 text-slate-400" /> : <ChevronDown className="w-3.5 h-3.5 text-slate-400" />}
+                  </button>
+                  {isWhyExpanded && (
+                    <div className="mt-2 text-xs text-slate-600 bg-slate-50/70 p-3 rounded-xl border border-slate-200/60 leading-relaxed animate-fade-in">
+                      {exercise.whyThisExercise}
+                    </div>
                   )}
-                </button>
-
-                {isWhyExpanded && (
-                  <div className="mt-2 text-xs text-slate-600 bg-slate-50/70 p-3 rounded-xl border border-slate-200/60 leading-relaxed animate-fade-in">
-                    {exercise.whyThisExercise}
-                  </div>
-                )}
+                </div>
               </div>
+
             </div>
           );
         })}
