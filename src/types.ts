@@ -1,0 +1,75 @@
+export type NavTab = 'dashboard' | 'meals' | 'workouts' | 'profile' | 'pricing';
+
+export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+
+export type WorkoutDayId = 'workout-a' | 'workout-b' | 'workout-c';
+
+export interface EvidenceCitation {
+  id: string;
+  title: string;
+  recommendation: string;
+  sources: {
+    name: string;
+    publication: string;
+    year?: string;
+    url?: string;
+  }[];
+  evidenceLevel: 'Strong' | 'Moderate' | 'Grade A Clinical';
+  clinicalSummary: string;
+}
+
+export interface HealthRelevanceItem {
+  condition: string;
+  iconType: 't1d' | 'celiac' | 'allergy' | 'back' | 'general';
+  explanation: string;
+}
+
+export interface Meal {
+  id: string;
+  type: 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack';
+  name: string;
+  subtitle: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  ingredientsSummary: string;
+  imageCategory: 'bowl' | 'salad' | 'plate' | 'smoothie' | 'soup';
+  healthBadges: string[];
+  healthRelevance: HealthRelevanceItem[];
+  whyThisMeal: string;
+  evidence: EvidenceCitation;
+}
+
+export interface Exercise {
+  id: string;
+  name: string;
+  sets: number;
+  reps: string;
+  category: string;
+  isModified: boolean;
+  modificationLabel?: string;
+  originalExerciseName?: string;
+  adjustmentReason?: string;
+  whyThisExercise: string;
+  evidence: EvidenceCitation;
+  t1dSafetyNote?: string;
+}
+
+export interface WorkoutDay {
+  id: WorkoutDayId;
+  label: string;
+  title: string;
+  estimatedDuration: string;
+  intensity: string;
+  muscleGroups: string[];
+  description: string;
+  exercises: Exercise[];
+}
+
+export interface HealthProfileState {
+  conditions: string[];
+  allergies: string[];
+  dietaryPreferences: string[];
+  physicalLimitations: string[];
+}

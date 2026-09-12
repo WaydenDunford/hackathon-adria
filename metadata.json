@@ -1,0 +1,6 @@
+{
+  "name": "CuraHealth - Health-Aware Meal & Workout Planner",
+  "description": "A modern, polished health-tech prototype generating personalized meal and workout plans tailored to health conditions, allergies, and physical limitations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
