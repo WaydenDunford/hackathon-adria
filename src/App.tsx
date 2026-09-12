@@ -11,10 +11,13 @@ import { EvidenceModal } from './components/EvidenceModal';
 import { SwapMealModal } from './components/SwapMealModal';
 import { ExerciseAlternativeModal } from './components/ExerciseAlternativeModal';
 import { HealthAdjustmentsModal } from './components/HealthAdjustmentsModal';
+import { LandingPage } from './components/LandingPage';
 import { Moon, Sun, Languages, ChevronDown } from 'lucide-react';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
+  const [userName, setUserName] = useState('Amina');
   const [healthProfile, setHealthProfile] = useState<HealthProfileState>(initialHealthProfile);
   const [selectedDay, setSelectedDay] = useState<DayOfWeek>('Monday');
   const [selectedWorkoutId, setSelectedWorkoutId] = useState<WorkoutDayId>('workout-a');
@@ -30,13 +33,34 @@ export default function App() {
   const handleConfirmSwap = (newMealData: { name: string; calories: number; protein: number; carbs: number; fat: number; desc: string }) => {
     if (!swapModalMeal) return;
     const { meal, day } = swapModalMeal;
-    setWeeklyMeals((prev) => ({ ...prev, [day]: (prev[day] || []).map((item) => item.id === meal.id ? {
-      ...item, name: newMealData.name, calories: newMealData.calories, protein: newMealData.protein, carbs: newMealData.carbs, fat: newMealData.fat, subtitle: newMealData.desc,
-      whyThisMeal: `Swapped alternative maintaining zero gluten and zero peanuts, with ${newMealData.carbs}g carbohydrates explicitly documented for Type 1 Diabetes glucose tracking.`,
-    } : item) }));
+    setWeeklyMeals((previousMeals) => ({
+      ...previousMeals,
+      [day]: (previousMeals[day] || []).map((item) => item.id === meal.id ? {
+        ...item,
+        name: newMealData.name,
+        calories: newMealData.calories,
+        protein: newMealData.protein,
+        carbs: newMealData.carbs,
+        fat: newMealData.fat,
+        subtitle: newMealData.desc,
+        whyThisMeal: `Swapped alternative maintaining zero gluten and zero peanuts, with ${newMealData.carbs}g carbohydrates explicitly documented for Type 1 Diabetes glucose tracking.`,
+      } : item),
+    }));
   };
 
-  const handleAddSnack = (day: DayOfWeek, snack: Meal) => setWeeklyMeals((prev) => ({ ...prev, [day]: [...(prev[day] || []), { ...snack, id: `${day.toLowerCase()}-snack-${Date.now()}` }] }));
+  const handleAddSnack = (day: DayOfWeek, snack: Meal) => setWeeklyMeals((previousMeals) => ({
+    ...previousMeals,
+    [day]: [...(previousMeals[day] || []), { ...snack, id: `${day.toLowerCase()}-snack-${Date.now()}` }],
+  }));
+
+  if (!hasCompletedOnboarding) {
+    return <LandingPage onComplete={(name, profile) => {
+      setUserName(name);
+      setHealthProfile(profile);
+      setCurrentTab('dashboard');
+      setHasCompletedOnboarding(true);
+    }} />;
+  }
 
   return (
     <div className={`app-shell min-h-screen bg-slate-50/80 text-slate-900 font-sans selection:bg-teal-100 selection:text-teal-900 ${isNightMode ? 'night-mode' : ''}`}>
@@ -46,16 +70,21 @@ export default function App() {
           <div className="flex items-center gap-2">
             <label className="relative flex items-center" aria-label="Language">
               <Languages className="pointer-events-none absolute left-3 h-4 w-4 text-slate-500" />
-              <select value={language} onChange={(event) => setLanguage(event.target.value)} className="appearance-none rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-8 text-xs font-bold text-slate-700 outline-none transition hover:border-teal-300 focus:border-teal-500"><option value="EN">English</option><option value="BS">Bosanski</option></select>
+              <select value={language} onChange={(event) => setLanguage(event.target.value)} className="appearance-none rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-8 text-xs font-bold text-slate-700 outline-none transition hover:border-teal-300 focus:border-teal-500">
+                <option value="EN">English</option>
+                <option value="BS">Bosanski</option>
+              </select>
               <ChevronDown className="pointer-events-none absolute right-2 h-3.5 w-3.5 text-slate-400" />
             </label>
             <button onClick={() => setIsNightMode((current) => !current)} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-teal-300 hover:text-teal-700" aria-pressed={isNightMode}>
-              {isNightMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}{isNightMode ? 'Light mode' : 'Night mode'}
+              {isNightMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {isNightMode ? 'Light mode' : 'Night mode'}
             </button>
           </div>
         </header>
+
         <main className="mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 sm:pt-8">
-          {currentTab === 'dashboard' && <DashboardScreen healthProfile={healthProfile} onNavigate={setCurrentTab} onOpenAdjustments={() => setIsAdjustmentsOpen(true)} />}
+          {currentTab === 'dashboard' && <DashboardScreen healthProfile={healthProfile} userName={userName} onNavigate={setCurrentTab} onOpenAdjustments={() => setIsAdjustmentsOpen(true)} />}
           {currentTab === 'meals' && <MealPlanScreen weeklyMeals={weeklyMeals} selectedDay={selectedDay} onSelectDay={setSelectedDay} onOpenEvidence={setActiveEvidence} onOpenSwapMeal={(meal, day) => setSwapModalMeal({ meal, day })} onAddSnack={handleAddSnack} />}
           {currentTab === 'workouts' && <WorkoutPlanScreen workouts={workouts} selectedWorkoutId={selectedWorkoutId} onSelectWorkout={setSelectedWorkoutId} onOpenEvidence={setActiveEvidence} onOpenExerciseAlternative={(exercise, workoutTitle) => setExerciseModalData({ exercise, workoutTitle })} />}
           {currentTab === 'profile' && <HealthProfileScreen initialProfile={healthProfile} onSaveProfile={setHealthProfile} />}
@@ -63,10 +92,11 @@ export default function App() {
         </main>
         <footer className="mt-10 border-t border-slate-200 bg-white/70 py-6"><div className="mx-auto flex max-w-6xl justify-end px-4 text-xs text-slate-500 sm:px-6"><span><strong className="text-slate-800">Favia Health</strong> · All rights reserved</span></div></footer>
       </div>
+
       <EvidenceModal evidence={activeEvidence} onClose={() => setActiveEvidence(null)} />
       <SwapMealModal meal={swapModalMeal?.meal || null} day={swapModalMeal?.day || ''} onClose={() => setSwapModalMeal(null)} onConfirmSwap={handleConfirmSwap} />
-      <ExerciseAlternativeModal exercise={exerciseModalData?.exercise || null} workoutTitle={exerciseModalData?.workoutTitle || ''} onClose={() => setExerciseModalData(null)} onViewEvidence={(ev) => { setExerciseModalData(null); setActiveEvidence(ev); }} />
-      <HealthAdjustmentsModal isOpen={isAdjustmentsOpen} onClose={() => setIsAdjustmentsOpen(false)} onViewEvidence={(ev) => { setIsAdjustmentsOpen(false); setActiveEvidence(ev); }} onNavigateToTab={(tab) => { setIsAdjustmentsOpen(false); setCurrentTab(tab); }} />
+      <ExerciseAlternativeModal exercise={exerciseModalData?.exercise || null} workoutTitle={exerciseModalData?.workoutTitle || ''} onClose={() => setExerciseModalData(null)} onViewEvidence={(evidence) => { setExerciseModalData(null); setActiveEvidence(evidence); }} />
+      <HealthAdjustmentsModal isOpen={isAdjustmentsOpen} onClose={() => setIsAdjustmentsOpen(false)} onViewEvidence={(evidence) => { setIsAdjustmentsOpen(false); setActiveEvidence(evidence); }} onNavigateToTab={(tab) => { setIsAdjustmentsOpen(false); setCurrentTab(tab); }} />
     </div>
   );
 }
