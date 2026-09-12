@@ -8,3 +8,9 @@
     -webkit-font-smoothing: antialiased;
   }
 }
+
+.night-mode { background: #0f172a !important; color: #e2e8f0 !important; }
+.night-mode aside, .night-mode header, .night-mode footer, .night-mode .bg-white, .night-mode .bg-white\/70, .night-mode .bg-white\/95 { background-color: #172033 !important; }
+.night-mode .bg-slate-50, .night-mode .bg-slate-50\/80, .night-mode .bg-slate-100, .night-mode .bg-slate-100\/80 { background-color: #1e293b !important; }
+.night-mode .border-slate-100, .night-mode .border-slate-200, .night-mode .border-slate-200\/60 { border-color: #334155 !important; }
+.night-mode .text-slate-900, .night-mode .text-slate-800, .night-mode .text-slate-700, .night-mode .text-slate-600, .night-mode .text-slate-500 { color: #dbeafe !important; }

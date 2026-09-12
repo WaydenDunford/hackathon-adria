@@ -18,6 +18,14 @@ const days: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday
 
 const mealBenefits = (meal: Meal) => meal.whyThisMeal || meal.healthRelevance[0]?.explanation;
 const getToday = () => days[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
+const mealImages: Record<Meal['imageCategory'], string> = {
+  bowl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80',
+  salad: 'https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=900&q=80',
+  plate: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80',
+  smoothie: 'https://images.unsplash.com/photo-1553530666-ba11a90a0868?auto=format&fit=crop&w=900&q=80',
+  soup: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=80',
+};
+const sentenceCase = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 const recipeForOneServing = (meal: Meal) => {
   const portions = meal.type === 'Breakfast'
     ? ['1 cup', '½ cup', '2 tbsp', '1 tsp']
@@ -26,9 +34,9 @@ const recipeForOneServing = (meal: Meal) => {
       : meal.type === 'Dinner'
         ? ['160 g', '200 g', '1 cup', '1 tbsp']
         : ['170 g', '¼ cup', '2 tbsp', '1 tsp'];
-  return meal.ingredientsSummary.split(',').slice(0, 4).map((ingredient, index) => ({
+  return meal.ingredientsSummary.split(',').map((ingredient, index) => ({
     ingredient: ingredient.trim(),
-    amount: portions[index],
+    amount: portions[index] || 'To taste',
   }));
 };
 
@@ -36,6 +44,8 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
   weeklyMeals, selectedDay, onSelectDay, onOpenEvidence, onOpenSwapMeal,
 }) => {
   const [openMeal, setOpenMeal] = useState<Meal | null>(null);
+  const [recipeMealIds, setRecipeMealIds] = useState<Set<string>>(new Set());
+  const [macroHeights, setMacroHeights] = useState<Record<string, number>>({});
   const [isWhyOpen, setIsWhyOpen] = useState(true);
   const [isHealthOpen, setIsHealthOpen] = useState(true);
   const today = getToday();
@@ -46,6 +56,20 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
     setOpenMeal(meal);
     setIsWhyOpen(true);
     setIsHealthOpen(true);
+  };
+
+  const toggleRecipe = (mealId: string) => {
+    setRecipeMealIds((current) => {
+      const next = new Set(current);
+      next.has(mealId) ? next.delete(mealId) : next.add(mealId);
+      return next;
+    });
+  };
+
+  const measureMacroHeight = (mealId: string) => (element: HTMLElement | null) => {
+    if (!element) return;
+    const height = Math.ceil(element.getBoundingClientRect().height);
+    setMacroHeights((current) => current[mealId] === height ? current : { ...current, [mealId]: height });
   };
 
   const iconForHealth = (type: Meal['healthRelevance'][number]['iconType']) => {
@@ -93,15 +117,12 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
       </section>
 
       <section className="space-y-8">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-600">{selectedDay}'s meals</h2>
-        </div>
-
         {meals.map((meal) => (
           <article
             key={meal.id}
             onClick={() => openDetails(meal)}
-            className="relative grid cursor-pointer overflow-visible rounded-3xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md md:grid-cols-[1.2fr_0.7fr_1fr]"
+            style={macroHeights[meal.id] ? { '--meal-card-height': `${macroHeights[meal.id]}px` } as React.CSSProperties : undefined}
+            className="relative grid cursor-pointer overflow-visible rounded-3xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md md:h-[var(--meal-card-height)] md:grid-cols-[1.2fr_0.7fr_1fr]"
           >
             <span className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 shadow-sm">{meal.type}</span>
             <section className="flex min-h-56 flex-col p-5 sm:p-6">
@@ -117,7 +138,7 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
               </div>
             </section>
 
-            <section className="border-y border-slate-100 bg-slate-50/70 p-5 sm:p-6 md:border-x md:border-y-0">
+            <section ref={measureMacroHeight(meal.id)} className="border-y border-slate-100 bg-slate-50/70 p-5 sm:p-6 md:self-start md:border-x md:border-y-0">
               <p className="mb-4 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">Macros</p>
               <div className="grid grid-cols-2 gap-2.5">
                 {[
@@ -138,22 +159,31 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
               </div>
             </section>
 
-            <section className="flex min-h-56 flex-col p-4 sm:p-5">
+            <section className="flex min-h-56 min-w-0 flex-col p-4 sm:p-5">
+              {recipeMealIds.has(meal.id) ? <><div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden pr-1 [scrollbar-width:thin]">
               <div>
                 <p className="mb-3 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">Recipe</p>
                 <div className="grid grid-cols-2 gap-2">
                   {recipeForOneServing(meal).map(({ ingredient, amount }) => (
                     <div key={ingredient} className="rounded-xl border border-slate-200 bg-slate-50 p-2.5">
                       <span className="block text-[10px] font-bold uppercase tracking-wide text-slate-400">{amount}</span>
-                      <span className="mt-0.5 block text-xs font-bold leading-snug text-slate-800">{ingredient}</span>
+                      <span className="mt-0.5 block text-xs font-bold leading-snug text-slate-800">{sentenceCase(ingredient)}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                <div className="rounded-xl bg-slate-50 p-2.5"><span className="block text-[10px] font-bold uppercase text-slate-400">Serving size</span><span className="text-xs font-bold text-slate-800">1 balanced plate</span></div>
-                <div className="rounded-xl bg-slate-50 p-2.5"><span className="block text-[10px] font-bold uppercase text-slate-400">Preparation</span><span className="text-xs font-bold text-slate-800">15–25 min</span></div>
               </div>
+              <div className="mt-3 flex shrink-0 items-center justify-between gap-3">
+                <div><span className="block text-[10px] font-bold uppercase tracking-wide text-slate-400">Serving size</span><span className="text-xs font-bold text-slate-800">1 balanced plate</span></div>
+                <button onClick={(event) => { event.stopPropagation(); toggleRecipe(meal.id); }} className="cursor-pointer rounded-xl bg-teal-600 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-teal-700">Hide recipe</button>
+              </div>
+              </> : <div className="flex h-full min-h-0 flex-col">
+                <img src={mealImages[meal.imageCategory]} alt={meal.name} className="min-h-0 w-full flex-1 rounded-2xl object-cover" />
+                <div className="mt-3 flex shrink-0 items-center justify-between gap-3">
+                  <div><span className="block text-[10px] font-bold uppercase tracking-wide text-slate-400">Serving size</span><span className="text-xs font-bold text-slate-800">1 balanced plate</span></div>
+                  <button onClick={(event) => { event.stopPropagation(); toggleRecipe(meal.id); }} className="cursor-pointer rounded-xl bg-teal-600 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-teal-700">Show recipe</button>
+                </div>
+              </div>}
             </section>
           </article>
         ))}
