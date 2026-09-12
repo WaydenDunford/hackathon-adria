@@ -123,9 +123,6 @@ export const WorkoutPlanScreen: React.FC<WorkoutPlanScreenProps> = ({
             <h2 className="text-xl font-bold text-slate-900">
               {currentWorkout.title}
             </h2>
-            <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed">
-              {currentWorkout.description}
-            </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">

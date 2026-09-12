@@ -63,7 +63,6 @@ export interface WorkoutDay {
   estimatedDuration: string;
   intensity: string;
   muscleGroups: string[];
-  description: string;
   exercises: Exercise[];
 }
 
