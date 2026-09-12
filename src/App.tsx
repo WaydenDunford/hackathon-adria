@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavTab, DayOfWeek, WorkoutDayId, Meal, Exercise, EvidenceCitation, HealthProfileState } from './types';
+import { NavTab, DayOfWeek, WorkoutDayId, Meal, Exercise, EvidenceCitation, HealthProfileState, DailyCheckIn } from './types';
 import { initialHealthProfile, sampleWeeklyMealPlan, sampleWorkouts } from './data/mockData';
 import { Navigation } from './components/Navigation';
 import { DashboardScreen } from './components/DashboardScreen';
@@ -14,6 +14,9 @@ import { HealthAdjustmentsModal } from './components/HealthAdjustmentsModal';
 import { LandingPage } from './components/LandingPage';
 import { SettingsScreen } from './components/SettingsScreen';
 
+// Temporary development aid: set false or remove the prop below before release.
+const ENABLE_DEV_ONBOARDING_SKIP = true;
+
 export default function App() {
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
@@ -22,7 +25,8 @@ export default function App() {
   const [selectedDay, setSelectedDay] = useState<DayOfWeek>('Monday');
   const [selectedWorkoutId, setSelectedWorkoutId] = useState<WorkoutDayId>('workout-a');
   const [weeklyMeals, setWeeklyMeals] = useState<Record<string, Meal[]>>(sampleWeeklyMealPlan);
-  const [workouts] = useState(sampleWorkouts);
+  const [workouts, setWorkouts] = useState(sampleWorkouts);
+  const [dailyCheckIn, setDailyCheckIn] = useState<DailyCheckIn | null>(null);
   const [activeEvidence, setActiveEvidence] = useState<EvidenceCitation | null>(null);
   const [swapModalMeal, setSwapModalMeal] = useState<{ meal: Meal; day: string } | null>(null);
   const [exerciseModalData, setExerciseModalData] = useState<{ exercise: Exercise; workoutTitle: string } | null>(null);
@@ -54,13 +58,58 @@ export default function App() {
     [day]: [...(previousMeals[day] || []), { ...snack, id: `${day.toLowerCase()}-snack-${Date.now()}` }],
   }));
 
+  const handleDailyCheckIn = (draft: Omit<DailyCheckIn, 'date' | 'completedAt' | 'planAdjusted' | 'adjustmentSummary'>) => {
+    const hasBackDiscomfort = draft.pain === 'moderate' || draft.pain === 'significant'
+      ? draft.affectedAreas.some((area) => area.toLowerCase() === 'lower back')
+      : false;
+    const needsLowerIntensity = draft.energy === 'lower' || draft.recovery === 'poor';
+    const shouldAdjust = hasBackDiscomfort || needsLowerIntensity;
+    const adjustmentSummary: string[] = [];
+    if (needsLowerIntensity) adjustmentSummary.push('Workout intensity reduced because you reported lower energy or poor recovery.');
+    if (hasBackDiscomfort) adjustmentSummary.push('Lower-back loading was reduced and supported movement variations were prioritized for today.');
+    if (draft.recovery === 'poor') adjustmentSummary.push('Training volume was reduced to support a recovery-oriented session.');
+
+    const now = new Date();
+    setDailyCheckIn({
+      ...draft,
+      date: now.toISOString().slice(0, 10),
+      completedAt: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      planAdjusted: shouldAdjust,
+      adjustmentSummary,
+    });
+
+    setWorkouts(sampleWorkouts.map((workout) => {
+      if (!shouldAdjust || workout.id !== 'workout-a') return workout;
+      return {
+        ...workout,
+        intensity: needsLowerIntensity ? 'Low-Moderate today' : workout.intensity,
+        estimatedDuration: draft.recovery === 'poor' ? '35 mins today' : workout.estimatedDuration,
+        exercises: workout.exercises.map((exercise) => {
+          const needsDailyBackAdaptation = hasBackDiscomfort && ['ex-a1', 'ex-a2', 'ex-a4'].includes(exercise.id);
+          if (!needsDailyBackAdaptation && !needsLowerIntensity) return exercise;
+          return {
+            ...exercise,
+            sets: draft.recovery === 'poor' ? Math.max(2, exercise.sets - 1) : exercise.sets,
+            dailyAdjustmentReason: needsDailyBackAdaptation
+              ? 'Today: kept as a supported, lower-back-considerate option because you reported lower-back discomfort.'
+              : 'Today: volume reduced to match your reported energy and recovery.',
+          };
+        }),
+      };
+    }));
+  };
+
   if (!hasCompletedOnboarding) {
-    return <LandingPage onComplete={(name, profile) => {
+    const handleOnboardingComplete = (name: string, profile: HealthProfileState) => {
       setUserName(name);
       setHealthProfile(profile);
       setCurrentTab('dashboard');
       setHasCompletedOnboarding(true);
-    }} />;
+    };
+    return <LandingPage
+      onComplete={handleOnboardingComplete}
+      onDevSkip={ENABLE_DEV_ONBOARDING_SKIP ? () => setHasCompletedOnboarding(true) : undefined}
+    />;
   }
 
   return (
@@ -69,7 +118,7 @@ export default function App() {
       <div className={`min-h-screen transition-[padding] duration-[400ms] ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isSidebarCollapsed ? 'md:pl-20' : 'md:pl-72'}`}>
 
         <main className="w-full px-4 pt-6 sm:px-6 sm:pt-8 lg:px-8">
-          {currentTab === 'dashboard' && <DashboardScreen healthProfile={healthProfile} userName={userName} onNavigate={setCurrentTab} onOpenAdjustments={() => setIsAdjustmentsOpen(true)} />}
+          {currentTab === 'dashboard' && <DashboardScreen healthProfile={healthProfile} userName={userName} dailyCheckIn={dailyCheckIn} onSaveDailyCheckIn={handleDailyCheckIn} onNavigate={setCurrentTab} onOpenAdjustments={() => setIsAdjustmentsOpen(true)} />}
           {currentTab === 'meals' && <MealPlanScreen weeklyMeals={weeklyMeals} selectedDay={selectedDay} onSelectDay={setSelectedDay} onOpenEvidence={setActiveEvidence} onOpenSwapMeal={(meal, day) => setSwapModalMeal({ meal, day })} onAddSnack={handleAddSnack} />}
           {currentTab === 'workouts' && <WorkoutPlanScreen workouts={workouts} selectedWorkoutId={selectedWorkoutId} onSelectWorkout={setSelectedWorkoutId} onOpenEvidence={setActiveEvidence} onOpenExerciseAlternative={(exercise, workoutTitle) => setExerciseModalData({ exercise, workoutTitle })} />}
           {currentTab === 'profile' && <HealthProfileScreen initialProfile={healthProfile} onSaveProfile={setHealthProfile} />}

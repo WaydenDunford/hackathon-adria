@@ -16,8 +16,9 @@ import trainingImage from '../assets/landing/training.png';
 import mobilityImage from '../assets/landing/mobility.png';
 import planningImage from '../assets/landing/planning.png';
 
-interface LandingPageProps {
+export interface LandingPageProps {
   onComplete: (name: string, profile: HealthProfileState) => void;
+  onDevSkip?: () => void;
 }
 
 const conditionOptions = ['Type 1 Diabetes', 'Type 2 Diabetes', 'Celiac Disease', 'Lower-Back Problems', 'Other', 'None'];
@@ -97,7 +98,7 @@ function ChoiceGrid({
   );
 }
 
-export function LandingPage({ onComplete }: LandingPageProps) {
+export function LandingPage({ onComplete, onDevSkip }: LandingPageProps) {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
@@ -184,7 +185,7 @@ export function LandingPage({ onComplete }: LandingPageProps) {
   return (
     <div className="h-[100dvh] overflow-hidden bg-white text-slate-950">
       <motion.header animate={{ width: isWideLayout && isOnboardingOpen ? '50%' : '100%' }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="absolute left-0 top-0 z-30 flex items-center px-6 py-6 sm:px-10 lg:px-[5vw] lg:py-8">
-        <div className="flex items-center gap-2.5 text-slate-900"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-sm"><HeartPulse className="h-5 w-5" /></span><span className="text-lg font-extrabold tracking-tight">CuraHealth</span></div>
+        <div className="flex w-full items-center justify-between gap-3"><div className="flex items-center gap-2.5 text-slate-900"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-sm"><HeartPulse className="h-5 w-5" /></span><span className="text-lg font-extrabold tracking-tight">CuraHealth</span></div>{onDevSkip && !isOnboardingOpen && <button type="button" onClick={onDevSkip} className="rounded-lg border border-dashed border-slate-300 bg-white/80 px-3 py-2 text-[11px] font-bold text-slate-500 transition hover:border-teal-400 hover:text-teal-700">Dev: skip onboarding</button>}</div>
       </motion.header>
 
       <main className="relative flex h-full min-h-0 flex-col overflow-hidden lg:flex-row-reverse">
