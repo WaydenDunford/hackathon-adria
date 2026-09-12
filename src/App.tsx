@@ -23,10 +23,13 @@ import { EvidenceModal } from './components/EvidenceModal';
 import { SwapMealModal } from './components/SwapMealModal';
 import { ExerciseAlternativeModal } from './components/ExerciseAlternativeModal';
 import { HealthAdjustmentsModal } from './components/HealthAdjustmentsModal';
+import { LandingPage } from './components/LandingPage';
 import { ShieldCheck, HeartPulse, RefreshCw } from 'lucide-react';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
+  const [userName, setUserName] = useState('Amina');
   const [healthProfile, setHealthProfile] = useState<HealthProfileState>(initialHealthProfile);
   const [selectedDay, setSelectedDay] = useState<DayOfWeek>('Monday');
   const [selectedWorkoutId, setSelectedWorkoutId] = useState<WorkoutDayId>('workout-a');
@@ -99,6 +102,15 @@ export default function App() {
     setHealthProfile(updatedProfile);
   };
 
+  if (!hasCompletedOnboarding) {
+    return <LandingPage onComplete={(name, profile) => {
+      setUserName(name);
+      setHealthProfile(profile);
+      setCurrentTab('dashboard');
+      setHasCompletedOnboarding(true);
+    }} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-50/80 text-slate-900 flex flex-col font-sans selection:bg-teal-100 selection:text-teal-900">
       {/* Top Navigation */}
@@ -114,6 +126,7 @@ export default function App() {
         {currentTab === 'dashboard' && (
           <DashboardScreen
             healthProfile={healthProfile}
+            userName={userName}
             onNavigate={setCurrentTab}
             onOpenAdjustments={() => setIsAdjustmentsOpen(true)}
           />

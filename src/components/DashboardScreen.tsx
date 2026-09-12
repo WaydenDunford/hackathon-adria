@@ -19,6 +19,7 @@ import {
 
 interface DashboardScreenProps {
   healthProfile: HealthProfileState;
+  userName: string;
   onNavigate: (tab: NavTab) => void;
   onOpenAdjustments: () => void;
 }
@@ -118,6 +119,7 @@ const healthFacts = [
 
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   healthProfile,
+  userName,
   onNavigate,
   onOpenAdjustments,
 }) => {
@@ -141,7 +143,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-              {greeting}, Amina
+              {greeting}, {userName}
             </h1>
 
             <div className="flex flex-wrap items-center gap-3 mt-6">
