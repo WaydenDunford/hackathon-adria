@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { FormEvent, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   ArrowLeft,
   ArrowRight,
   Check,
   ChevronRight,
-  HeartPulse,
   Search,
   ShieldCheck,
   Sparkles,
@@ -33,12 +33,19 @@ const visuals = [
   { src: planningImage, label: 'Built Around You' },
 ];
 
-const toggleChoice = (items: string[], item: string) => {
-  if (item === 'None') return items.includes('None') ? [] : ['None'];
-  const withoutNone = items.filter((value) => value !== 'None');
-  return withoutNone.includes(item)
-    ? withoutNone.filter((value) => value !== item)
-    : [...withoutNone, item];
+const personalizationStages = [
+  { title: 'Making your plan', description: 'Bringing your health profile, preferences, and goals together.' },
+  { title: 'Personalizing your workouts', description: 'Selecting movement that works with your needs and limitations.' },
+  { title: 'Adjusting your calories', description: 'Balancing nutrition guidance around your dietary preferences.' },
+  { title: 'Completing your plan', description: 'Adding the final details for a practical, sustainable routine.' },
+];
+
+const toggleChoice = (items: string[], item: string, exclusiveOption = 'None') => {
+  if (item === exclusiveOption) return items.includes(exclusiveOption) ? [] : [exclusiveOption];
+  const withoutExclusive = items.filter((value) => value !== exclusiveOption);
+  return withoutExclusive.includes(item)
+    ? withoutExclusive.filter((value) => value !== item)
+    : [...withoutExclusive, item];
 };
 
 function ChoiceGrid({
@@ -46,11 +53,13 @@ function ChoiceGrid({
   values,
   onChange,
   searchable = false,
+  exclusiveOption = 'None',
 }: {
   options: string[];
   values: string[];
   onChange: (values: string[]) => void;
   searchable?: boolean;
+  exclusiveOption?: string;
 }) {
   const [query, setQuery] = useState('');
   const visibleOptions = useMemo(
@@ -78,7 +87,7 @@ function ChoiceGrid({
             <button
               type="button"
               key={option}
-              onClick={() => onChange(toggleChoice(values, option))}
+              onClick={() => onChange(toggleChoice(values, option, exclusiveOption))}
               aria-pressed={isSelected}
               className={`flex min-h-12 items-center justify-between rounded-xl border px-4 py-3 text-left text-sm font-semibold transition-all ${
                 isSelected
@@ -113,6 +122,7 @@ export function LandingPage({ onComplete, onDevSkip }: LandingPageProps) {
   const [otherPreference, setOtherPreference] = useState('');
   const [error, setError] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationStage, setGenerationStage] = useState(0);
   const [isWideLayout, setIsWideLayout] = useState(false);
 
   useEffect(() => {
@@ -122,6 +132,18 @@ export function LandingPage({ onComplete, onDevSkip }: LandingPageProps) {
     mediaQuery.addEventListener('change', updateLayout);
     return () => mediaQuery.removeEventListener('change', updateLayout);
   }, []);
+
+  useEffect(() => {
+    if (!isGenerating) {
+      setGenerationStage(0);
+      return;
+    }
+
+    const timers = personalizationStages.slice(1).map((_, index) =>
+      window.setTimeout(() => setGenerationStage(index + 1), (index + 1) * 1200)
+    );
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [isGenerating]);
 
   const openOnboarding = () => setIsOnboardingOpen(true);
   const next = () => {
@@ -133,6 +155,7 @@ export function LandingPage({ onComplete, onDevSkip }: LandingPageProps) {
     setStep((current) => Math.min(5, current + 1));
   };
   const createPlan = () => {
+    if (isGenerating) return;
     const appendOther = (values: string[], other: string) =>
       values.filter((value) => value !== 'None' && value !== 'Other').concat(other.trim() ? [other.trim()] : []);
     setIsGenerating(true);
@@ -143,7 +166,24 @@ export function LandingPage({ onComplete, onDevSkip }: LandingPageProps) {
         physicalLimitations: appendOther(limitations, otherLimitation),
         dietaryPreferences: preferences.includes('No preference') ? [] : appendOther(preferences, otherPreference),
       });
-    }, 2200);
+    }, 5200);
+  };
+
+  const advanceSurvey = () => {
+    if (isGenerating) return;
+    if (step < 5) next();
+    else createPlan();
+  };
+
+  const handleSurveySubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    advanceSurvey();
+  };
+
+  const handleSurveyKeyDown = (event: ReactKeyboardEvent<HTMLFormElement>) => {
+    if (event.key !== 'Enter' || event.nativeEvent.isComposing || (event.target as HTMLElement).tagName === 'TEXTAREA') return;
+    event.preventDefault();
+    advanceSurvey();
   };
 
   const renderStep = () => {
@@ -160,11 +200,11 @@ export function LandingPage({ onComplete, onDevSkip }: LandingPageProps) {
         ? { title: 'Any food allergies or intolerances?', description: 'Select as many as apply. Choose None if there are no food restrictions.', options: allergyOptions, values: allergies, setValues: setAllergies, other: otherAllergy, setOther: setOtherAllergy, label: 'allergy or intolerance' }
         : step === 4
           ? { title: 'Anything that affects how you move?', description: 'We’ll use this to adapt movement recommendations.', options: limitationOptions, values: limitations, setValues: setLimitations, other: otherLimitation, setOther: setOtherLimitation, label: 'movement consideration' }
-          : { title: 'What are your dietary preferences?', description: 'Preferences are separate from allergies and medical restrictions.', options: dietaryOptions, values: preferences, setValues: setPreferences, other: otherPreference, setOther: setOtherPreference, label: 'dietary preference' };
+          : { title: 'What are your dietary preferences?', description: 'Preferences are separate from allergies and medical restrictions.', options: dietaryOptions, values: preferences, setValues: setPreferences, other: otherPreference, setOther: setOtherPreference, label: 'dietary preference', exclusiveOption: 'No preference' };
     return (
       <div className="space-y-5">
         <div><h2 className="text-2xl font-bold tracking-tight text-slate-900">{content.title}</h2><p className="mt-1 text-sm text-slate-500">{content.description}</p></div>
-        <ChoiceGrid options={content.options} values={content.values} onChange={content.setValues} searchable={content.searchable} />
+        <ChoiceGrid options={content.options} values={content.values} onChange={content.setValues} searchable={content.searchable} exclusiveOption={content.exclusiveOption} />
         {content.values.includes('Other') && <label className="block text-sm font-semibold text-slate-700">Tell us more<input value={content.other} onChange={(event) => content.setOther(event.target.value)} className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-base outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/15" placeholder={`Describe your ${content.label}`} /></label>}
       </div>
     );
@@ -172,20 +212,24 @@ export function LandingPage({ onComplete, onDevSkip }: LandingPageProps) {
 
   const onboardingPanel = (
     <div className="mx-auto w-full max-w-xl px-6 py-24 sm:px-10 lg:py-14">
-      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_18px_45px_rgba(15,23,42,0.08)] sm:p-8">
+      <div className="mb-6 flex items-center gap-2.5 px-1 text-slate-900">
+        <img src="/favia-health-favicon.png" alt="Favia Health" className="h-10 w-10 rounded-xl border border-teal-100 bg-white object-cover shadow-sm" />
+        <div><p className="text-lg font-extrabold tracking-tight">Favia Health</p><p className="text-[10px] font-bold uppercase tracking-[0.15em] text-teal-600">Your wellness space</p></div>
+      </div>
+      <form onSubmit={handleSurveySubmit} onKeyDown={handleSurveyKeyDown} className="flex rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_18px_45px_rgba(15,23,42,0.08)] sm:p-8 lg:h-[600px] lg:flex-col">
         <div className="mb-7 flex items-center justify-between gap-4"><div className="flex items-center gap-2 text-sm font-bold text-teal-700"><ShieldCheck className="h-5 w-5" />Your health profile</div><span className="text-xs font-semibold text-slate-400">Step {step} of 5</span></div>
         <div className="mb-8 flex gap-1.5" aria-label={`Step ${step} of 5`}>{[1, 2, 3, 4, 5].map((item) => <span key={item} className={`h-1.5 flex-1 rounded-full ${item <= step ? 'bg-teal-600' : 'bg-slate-100'}`} />)}</div>
-        {renderStep()}
+        <div className="lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-1">{renderStep()}</div>
         {error && <p role="alert" className="mt-4 rounded-xl bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{error}</p>}
-        <div className="mt-8 flex items-center justify-between gap-3 border-t border-slate-100 pt-5"><button type="button" onClick={() => step === 1 ? setIsOnboardingOpen(false) : setStep((current) => current - 1)} className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100"><ArrowLeft className="h-4 w-4" />{step === 1 ? 'Back to landing' : 'Back'}</button>{step < 5 ? <button type="button" onClick={next} className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-5 py-3 text-sm font-bold text-white hover:bg-teal-500">Continue<ArrowRight className="h-4 w-4" /></button> : <button type="button" onClick={createPlan} className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-5 py-3 text-sm font-bold text-white hover:bg-teal-500"><Sparkles className="h-4 w-4" />Create My Plan</button>}</div>
-      </div>
+        <div className="mt-6 flex shrink-0 items-center justify-between gap-3 border-t border-slate-100 pt-5"><button type="button" onClick={() => step === 1 ? setIsOnboardingOpen(false) : setStep((current) => current - 1)} className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100"><ArrowLeft className="h-4 w-4" />{step === 1 ? 'Back to landing' : 'Back'}</button>{step < 5 ? <button type="submit" className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-5 py-3 text-sm font-bold text-white hover:bg-teal-500">Continue<ArrowRight className="h-4 w-4" /></button> : <button type="submit" disabled={isGenerating} className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-5 py-3 text-sm font-bold text-white hover:bg-teal-500 disabled:cursor-not-allowed disabled:opacity-70"><Sparkles className="h-4 w-4" />Create My Plan</button>}</div>
+      </form>
     </div>
   );
 
   return (
     <div className="h-[100dvh] overflow-hidden bg-white text-slate-950">
-      <motion.header animate={{ width: isWideLayout && isOnboardingOpen ? '50%' : '100%' }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="absolute left-0 top-0 z-30 flex items-center px-6 py-6 sm:px-10 lg:px-[5vw] lg:py-8">
-        <div className="flex w-full items-center justify-between gap-3"><div className="flex items-center gap-2.5 text-slate-900"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-sm"><HeartPulse className="h-5 w-5" /></span><span className="text-lg font-extrabold tracking-tight">CuraHealth</span></div>{onDevSkip && !isOnboardingOpen && <button type="button" onClick={onDevSkip} className="rounded-lg border border-dashed border-slate-300 bg-white/80 px-3 py-2 text-[11px] font-bold text-slate-500 transition hover:border-teal-400 hover:text-teal-700">Dev: skip onboarding</button>}</div>
+      <motion.header animate={{ width: isWideLayout && isOnboardingOpen ? '50%' : '100%', opacity: isOnboardingOpen ? 0 : 1 }} transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }} className="absolute left-0 top-0 z-30 flex items-center px-6 py-6 sm:px-10 lg:px-[5vw] lg:py-8">
+        <div className="flex w-full items-center justify-between gap-3"><div className="flex items-center gap-2.5 text-slate-900"><img src="/favia-health-favicon.png" alt="Favia Health" className="h-10 w-10 rounded-xl border border-teal-100 bg-white object-cover shadow-sm" /><span className="text-lg font-extrabold tracking-tight">Favia Health</span></div>{onDevSkip && !isOnboardingOpen && <button type="button" onClick={onDevSkip} className="rounded-lg border border-dashed border-slate-300 bg-white/80 px-3 py-2 text-[11px] font-bold text-slate-500 transition hover:border-teal-400 hover:text-teal-700">Dev: skip onboarding</button>}</div>
       </motion.header>
 
       <main className="relative flex h-full min-h-0 flex-col overflow-hidden lg:flex-row-reverse">
@@ -203,7 +247,7 @@ export function LandingPage({ onComplete, onDevSkip }: LandingPageProps) {
         <AnimatePresence initial={false}>{isOnboardingOpen && <motion.section initial={{ opacity: 0, width: isWideLayout ? 0 : '100%' }} animate={{ opacity: 1, width: isWideLayout ? '50%' : '100%' }} exit={{ opacity: 0, width: isWideLayout ? 0 : '100%' }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className={`min-w-0 overflow-y-auto bg-slate-50 ${isWideLayout ? 'h-full shrink-0' : 'absolute inset-0 z-20 h-full'}`} role="dialog" aria-modal="true" aria-label="Health onboarding questionnaire">{onboardingPanel}</motion.section>}</AnimatePresence>
       </main>
 
-      <AnimatePresence>{isGenerating && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/20 p-6 backdrop-blur-md"><motion.div initial={{ opacity: 0, y: 10, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="w-full max-w-sm rounded-3xl border border-white/70 bg-white/90 p-8 text-center shadow-2xl"><motion.div animate={{ rotate: 360 }} transition={{ duration: 1.15, repeat: Infinity, ease: 'linear' }} className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border-4 border-teal-100 border-t-teal-600"><Sparkles className="h-4 w-4 text-teal-600" /></motion.div><h2 className="mt-5 text-xl font-bold text-slate-900">Making your personalized plan</h2><p className="mt-2 text-sm leading-6 text-slate-500">We’re tailoring meals and movement around the details you shared.</p></motion.div></motion.div>}</AnimatePresence>
+      <AnimatePresence>{isGenerating && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/20 p-6 backdrop-blur-md"><motion.div initial={{ opacity: 0, y: 10, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="w-full max-w-sm rounded-3xl border border-white/70 bg-white/90 p-8 text-center shadow-2xl"><motion.div animate={{ rotate: 360 }} transition={{ duration: 1.15, repeat: Infinity, ease: 'linear' }} className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border-4 border-teal-100 border-t-teal-600"><Sparkles className="h-4 w-4 text-teal-600" /></motion.div><div className="mt-5 min-h-24"><AnimatePresence mode="wait"><motion.div key={generationStage} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22 }}><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-teal-600">Personalizing · {generationStage + 1} of {personalizationStages.length}</p><h2 className="mt-2 text-xl font-bold text-slate-900">{personalizationStages[generationStage].title}</h2><p className="mt-2 text-sm leading-6 text-slate-500">{personalizationStages[generationStage].description}</p></motion.div></AnimatePresence></div><div className="mt-5 h-1.5 overflow-hidden rounded-full bg-teal-100"><motion.div animate={{ width: `${((generationStage + 1) / personalizationStages.length) * 100}%` }} transition={{ duration: 0.45, ease: 'easeOut' }} className="h-full rounded-full bg-teal-600" /></div></motion.div></motion.div>}</AnimatePresence>
     </div>
   );
 }
