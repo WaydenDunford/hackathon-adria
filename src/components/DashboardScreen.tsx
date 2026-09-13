@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import { DailyCheckIn, HealthProfileState, NavTab, EvidenceCitation } from '../types';
 import { DailyCheckInCard } from './DailyCheckInCard';
 import {
@@ -120,6 +120,28 @@ const healthFacts = [
   },
 ];
 
+const profileSummaryItems = (profile: HealthProfileState) => {
+  const items: { label: string; description: string; icon: typeof Activity; iconClass: string }[] = [];
+  const conditionDescriptions: Record<string, string> = {
+    'Type 1 Diabetes': 'Carbohydrate counts are highlighted; exercise glucose safety guidance is included.',
+    'Type 2 Diabetes': 'Balanced carbohydrate portions and meal-level nutrition details are prioritized.',
+    'Celiac Disease': 'Gluten-free planning and cross-contact awareness are enabled.',
+    'Lower-Back Problems': 'Movement recommendations are adapted to reduce unnecessary spinal loading.',
+  };
+
+  profile.conditions.forEach((condition) => items.push({
+    label: condition,
+    description: conditionDescriptions[condition] || 'Included in your personalized health plan.',
+    icon: condition.includes('Diabetes') ? Activity : condition === 'Celiac Disease' ? Wheat : ShieldCheck,
+    iconClass: condition.includes('Diabetes') ? 'bg-sky-100 text-sky-700' : condition === 'Celiac Disease' ? 'bg-amber-100 text-amber-700' : 'bg-purple-100 text-purple-700',
+  }));
+  profile.allergies.forEach((allergy) => items.push({ label: `${allergy} allergy`, description: `${allergy} is excluded from your meal recommendations.`, icon: Nut, iconClass: 'bg-red-100 text-red-700' }));
+  profile.dietaryPreferences.forEach((preference) => items.push({ label: preference, description: `${preference} meal preferences are applied.`, icon: preference === 'Gluten-Free' ? Wheat : Utensils, iconClass: 'bg-teal-100 text-teal-700' }));
+  profile.physicalLimitations.filter((limitation) => limitation.toLowerCase() !== 'lower back').forEach((limitation) => items.push({ label: `${limitation} consideration`, description: 'Movement recommendations account for this consideration.', icon: ShieldCheck, iconClass: 'bg-purple-100 text-purple-700' }));
+
+  return items.length ? items : [{ label: 'Personalized wellness', description: 'Your plan is ready to support your goals.', icon: HeartPulse, iconClass: 'bg-teal-100 text-teal-700' }];
+};
+
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   healthProfile,
   userName,
@@ -130,7 +152,27 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
 }) => {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-  const [healthFact] = useState(() => healthFacts[Math.floor(Math.random() * healthFacts.length)]);
+  const profileItems = useMemo(() => profileSummaryItems(healthProfile), [healthProfile]);
+  const healthFact = useMemo(() => healthFacts.find((fact) => healthProfile.conditions.includes(fact.condition)) || {
+    fact: 'Your plan is organized around the health information and preferences you selected.',
+    source: 'Your Favia Health profile',
+    sourceUrl: undefined,
+  }, [healthProfile.conditions]);
+  const mealHighlights = [
+    ...healthProfile.allergies.map((allergy) => `${allergy}-free meal recommendations`),
+    ...healthProfile.dietaryPreferences.map((preference) => `${preference} preferences applied`),
+    ...(healthProfile.conditions.some((condition) => condition.includes('Diabetes')) ? ['Carbohydrate information visible for every meal'] : []),
+  ];
+  const workoutHighlights = [
+    ...healthProfile.physicalLimitations.map((limitation) => `${limitation} movement considerations applied`),
+    ...(healthProfile.conditions.includes('Type 1 Diabetes') ? ['Type 1 Diabetes exercise safety guidance included'] : []),
+  ];
+  const auditHighlights = [
+    ...healthProfile.allergies.map((allergy) => ({ title: `21 / 21 meals checked for ${allergy.toLowerCase()}`, description: `${allergy} is excluded from recommendations.` })),
+    ...healthProfile.dietaryPreferences.map((preference) => ({ title: `${preference} preference applied`, description: 'All meals are filtered to match your preference.' })),
+    ...(healthProfile.conditions.filter((condition) => condition.includes('Diabetes')).map((condition) => ({ title: `${condition} meal information ready`, description: 'Carbohydrate information is available for every meal and snack.' }))),
+    ...healthProfile.physicalLimitations.map((limitation) => ({ title: `${limitation} movement review complete`, description: 'Workout recommendations account for this consideration.' })),
+  ];
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
@@ -178,14 +220,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
               <span>Did you know?</span>
             </div>
             <p className="mt-2 text-sm leading-relaxed text-slate-100">{healthFact.fact}</p>
-            <a
-              href={healthFact.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-3 inline-block text-xs font-medium text-teal-300 hover:text-teal-200 underline underline-offset-2"
-            >
-              Source: {healthFact.source}
-            </a>
+            {healthFact.sourceUrl ? <a href={healthFact.sourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-block text-xs font-medium text-teal-300 hover:text-teal-200 underline underline-offset-2">Source: {healthFact.source}</a> : <p className="mt-3 text-xs font-medium text-teal-300">Source: {healthFact.source}</p>}
           </aside>
         </div>
       </div>
@@ -223,67 +258,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           </button>
         </div>
 
-        {/* Badges / Chips */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {/* Type 1 Diabetes */}
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
-            <div className="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center shrink-0 mt-0.5">
-              <Activity className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-sm text-slate-900">Type 1 Diabetes</span>
-              </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Carb counts highlighted; exercise hypoglycemia safety rules applied.
-              </p>
-            </div>
-          </div>
-
-          {/* Celiac Disease */}
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
-            <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
-              <Wheat className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-sm text-slate-900">Celiac Disease</span>
-              </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                100% strict gluten elimination; cross-contact precautions enabled.
-              </p>
-            </div>
-          </div>
-
-          {/* Peanut Allergy */}
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
-            <div className="w-7 h-7 rounded-lg bg-red-100 text-red-700 flex items-center justify-center shrink-0 mt-0.5">
-              <Nut className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-sm text-slate-900">Peanut Allergy</span>
-              </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Zero peanut ingredients; seed-butter safe substitutions used.
-              </p>
-            </div>
-          </div>
-
-          {/* Lower-Back Problems */}
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
-            <div className="w-7 h-7 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 mt-0.5">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-sm text-slate-900">Lower-Back Problems</span>
-              </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Axial loading substituted; disc compression minimized.
-              </p>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {profileItems.map((item) => {
+            const Icon = item.icon;
+            return <div key={item.label} className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3.5"><div className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${item.iconClass}`}><Icon className="h-4 w-4" /></div><div><span className="text-sm font-bold text-slate-900">{item.label}</span><p className="mt-0.5 text-xs text-slate-500">{item.description}</p></div></div>;
+          })}
         </div>
       </div>
 
@@ -340,19 +319,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                 </div>
               </div>
 
-              <ul className="space-y-2 text-xs text-slate-600 mb-6">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Verified 100% gluten-free and peanut-free recipes</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Precise carbohydrate tracking visible for every meal</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Breakfast through dinner + stabilizing snacks</span>
-                </li>
+              <ul className="mb-6 space-y-2 text-xs text-slate-600">
+                {(mealHighlights.length ? mealHighlights : ['Balanced meals with nutrition information for every day', 'Breakfast through dinner plus practical snacks']).slice(0, 3).map((highlight) => <li key={highlight} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" /><span>{highlight}</span></li>)}
               </ul>
             </div>
 
@@ -412,19 +380,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                 </div>
               </div>
 
-              <ul className="space-y-2 text-xs text-slate-600 mb-6">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>3 high-compression movements safely modified</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Type 1 Diabetes exercise safety guidelines included</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>15 exercises kept standard without over-restriction</span>
-                </li>
+              <ul className="mb-6 space-y-2 text-xs text-slate-600">
+                {(workoutHighlights.length ? workoutHighlights : ['Balanced strength and mobility recommendations', 'Exercises kept practical for your routine']).slice(0, 3).map((highlight) => <li key={highlight} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" /><span>{highlight}</span></li>)}
               </ul>
             </div>
 
@@ -472,51 +429,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           </button>
         </div>
 
-        {/* 5 Content Bullets specified by prompt */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          <div className="p-3 rounded-xl bg-white border border-slate-200/80 shadow-2xs flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-            <div>
-              <div className="font-bold text-slate-900 text-xs sm:text-sm">21 / 21 meals checked for gluten</div>
-              <div className="text-[11px] text-slate-500 mt-0.5">Zero gluten or wheat cross-contact</div>
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white border border-slate-200/80 shadow-2xs flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-            <div>
-              <div className="font-bold text-slate-900 text-xs sm:text-sm">21 / 21 meals checked for peanuts</div>
-              <div className="text-[11px] text-slate-500 mt-0.5">100% allergen exclusion verified</div>
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white border border-slate-200/80 shadow-2xs flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 text-teal-600 shrink-0 mt-0.5" />
-            <div>
-              <div className="font-bold text-slate-900 text-xs sm:text-sm">Carbohydrate information ready</div>
-              <div className="text-[11px] text-slate-500 mt-0.5">Available for every single meal &amp; snack</div>
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white border border-slate-200/80 shadow-2xs flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 text-teal-600 shrink-0 mt-0.5" />
-            <div>
-              <div className="font-bold text-slate-900 text-xs sm:text-sm">18 / 18 exercises reviewed</div>
-              <div className="text-[11px] text-slate-500 mt-0.5">Evaluated for lower-back disc loading</div>
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-white border border-amber-200 shadow-2xs flex items-start gap-3 col-span-1 sm:col-span-2 lg:col-span-2">
-            <div className="w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-              3
-            </div>
-            <div>
-              <div className="font-bold text-slate-900 text-xs sm:text-sm">3 exercises modified based on physical limitations</div>
-              <div className="text-[11px] text-slate-600 mt-0.5">
-                Barbell back squats, bent-over rows, and heavy Romanian deadlifts safely adapted to remove axial spine compression.
-              </div>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+          {(auditHighlights.length ? auditHighlights : [{ title: 'Your plan is ready', description: 'Meals and movement recommendations are personalized to your selections.' }]).map((item) => <div key={item.title} className="flex items-start gap-3 rounded-xl border border-slate-200/80 bg-white p-3 shadow-2xs"><CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" /><div><div className="text-xs font-bold text-slate-900 sm:text-sm">{item.title}</div><div className="mt-0.5 text-[11px] text-slate-500">{item.description}</div></div></div>)}
         </div>
       </div>
     </div>

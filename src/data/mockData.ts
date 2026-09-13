@@ -1,4 +1,4 @@
-import { EvidenceCitation, Meal, WorkoutDay, HealthProfileState } from '../types';
+import { EvidenceCitation, HealthRelevanceItem, Meal, WorkoutDay, HealthProfileState } from '../types';
 
 export const initialHealthProfile: HealthProfileState = {
   conditions: ['Type 1 Diabetes', 'Celiac Disease', 'Lower-Back Problems'],
@@ -1051,6 +1051,51 @@ export const sampleWeeklyMealPlan: Record<string, Meal[]> = {
       evidence: defaultEvidenceLibrary.celiacGlutenEvidence,
     },
   ],
+};
+
+const mealRelevanceForProfile = (profile: HealthProfileState): HealthRelevanceItem[] => {
+  const items: HealthRelevanceItem[] = [];
+
+  profile.conditions.forEach((condition) => {
+    if (condition === 'Type 1 Diabetes') {
+      items.push({ condition, iconType: 't1d', explanation: 'Carbohydrate grams are clearly shown to support meal-by-meal glucose and insulin planning.' });
+    } else if (condition === 'Type 2 Diabetes') {
+      items.push({ condition, iconType: 't1d', explanation: 'Carbohydrate portions and balanced protein are shown to support steady energy and glucose-aware meal planning.' });
+    } else if (condition === 'Celiac Disease') {
+      items.push({ condition, iconType: 'celiac', explanation: 'The meal is planned with gluten-free ingredients and cross-contact awareness.' });
+    } else {
+      items.push({ condition, iconType: 'general', explanation: `${condition} is included in your personalized nutrition review.` });
+    }
+  });
+
+  profile.allergies.forEach((allergy) => {
+    items.push({ condition: `${allergy} allergy`, iconType: 'allergy', explanation: `${allergy} is excluded from this personalized meal plan.` });
+  });
+
+  profile.dietaryPreferences.forEach((preference) => {
+    items.push({ condition: preference, iconType: preference === 'Gluten-Free' ? 'celiac' : 'general', explanation: `${preference} preference is applied to this meal.` });
+  });
+
+  return items.length ? items : [{ condition: 'Your nutrition goals', iconType: 'general', explanation: 'Balanced ingredients and clear nutrition information support your personalized plan.' }];
+};
+
+/** Produces a meal plan whose displayed safeguards reflect the onboarding profile. */
+export const createWeeklyMealPlan = (profile: HealthProfileState): Record<string, Meal[]> => {
+  const relevance = mealRelevanceForProfile(profile);
+  const badges = relevance.map((item) => item.condition).filter((item, index, all) => all.indexOf(item) === index);
+  const focus = badges.length ? badges.join(', ') : 'your nutrition goals';
+
+  return Object.fromEntries(Object.entries(sampleWeeklyMealPlan).map(([day, meals]) => [day, meals.map((meal) => ({
+    ...meal,
+    healthBadges: badges,
+    healthRelevance: relevance,
+    whyThisMeal: `This meal is tailored around ${focus}, with balanced macros and clearly listed ingredients.`,
+    evidence: profile.conditions.includes('Celiac Disease') || profile.dietaryPreferences.includes('Gluten-Free')
+      ? defaultEvidenceLibrary.celiacGlutenEvidence
+      : profile.allergies.length > 0
+        ? defaultEvidenceLibrary.peanutAllergyEvidence
+        : defaultEvidenceLibrary.t1dCarbEvidence,
+  }))]));
 };
 
 export const sampleWorkouts: WorkoutDay[] = [

@@ -25,6 +25,13 @@ const mealImages: Record<Meal['imageCategory'], string> = {
   smoothie: 'https://images.unsplash.com/photo-1553530666-ba11a90a0868?auto=format&fit=crop&w=900&q=80',
   soup: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=80',
 };
+const mondayMealImages: Record<string, string> = {
+  'mon-b1': '/meal-images/monday-berry-chia-porridge.png',
+  'mon-l1': '/meal-images/monday-salmon-quinoa-bowl.png',
+  'mon-d1': '/meal-images/monday-lemon-herb-chicken.png',
+  'mon-s1': '/meal-images/monday-greek-yogurt-seeds.png',
+};
+const imageForMeal = (meal: Meal) => mondayMealImages[meal.id] || mealImages[meal.imageCategory];
 const sentenceCase = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 const recipeForOneServing = (meal: Meal) => {
   const portions = meal.type === 'Breakfast'
@@ -50,7 +57,6 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
   const [isHealthOpen, setIsHealthOpen] = useState(true);
   const today = getToday();
   const meals = weeklyMeals[selectedDay] || [];
-  const dayCalories = meals.reduce((total, meal) => total + meal.calories, 0);
 
   const openDetails = (meal: Meal) => {
     setOpenMeal(meal);
@@ -81,13 +87,10 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
 
   return (
     <div className="space-y-6 animate-fade-in pb-12">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <header>
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-teal-700">Your weekly menu</p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">7-Day Health-Aware Meal Plan</h1>
-        </div>
-        <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600">
-          {selectedDay}: <strong className="text-slate-900">{dayCalories} kcal planned</strong>
         </div>
       </header>
 
@@ -110,7 +113,7 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
                 <span className={`text-xs font-bold ${active ? 'text-teal-800' : 'text-slate-800'}`}>{day}</span>
                 {isToday && <span className="rounded-full bg-teal-600 px-1.5 py-0.5 text-[9px] font-bold uppercase text-white">Today</span>}
               </div>
-              <span className="mt-1 block text-[11px] text-slate-500">{(weeklyMeals[day] || []).length} meals · {total} kcal</span>
+              <span className="mt-1 block text-[11px] text-slate-500">{total} kcal planned</span>
             </button>
           );
         })}
@@ -178,7 +181,7 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
                 <button onClick={(event) => { event.stopPropagation(); toggleRecipe(meal.id); }} className="cursor-pointer rounded-xl bg-teal-600 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-teal-700">Hide recipe</button>
               </div>
               </> : <div className="flex h-full min-h-0 flex-col">
-                <img src={mealImages[meal.imageCategory]} alt={meal.name} className="min-h-0 w-full flex-1 rounded-2xl object-cover" />
+                <img src={imageForMeal(meal)} alt={meal.name} className="min-h-0 w-full flex-1 rounded-2xl object-cover" />
                 <div className="mt-3 flex shrink-0 items-center justify-between gap-3">
                   <div><span className="block text-[10px] font-bold uppercase tracking-wide text-slate-400">Serving size</span><span className="text-xs font-bold text-slate-800">1 balanced plate</span></div>
                   <button onClick={(event) => { event.stopPropagation(); toggleRecipe(meal.id); }} className="cursor-pointer rounded-xl bg-teal-600 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-teal-700">Show recipe</button>

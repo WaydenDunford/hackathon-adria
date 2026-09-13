@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavTab, DayOfWeek, WorkoutDayId, Meal, Exercise, EvidenceCitation, HealthProfileState, DailyCheckIn } from './types';
-import { initialHealthProfile, sampleWeeklyMealPlan, sampleWorkouts } from './data/mockData';
+import { createWeeklyMealPlan, initialHealthProfile, sampleWorkouts } from './data/mockData';
 import { Navigation } from './components/Navigation';
 import { DashboardScreen } from './components/DashboardScreen';
 import { MealPlanScreen } from './components/MealPlanScreen';
@@ -24,7 +24,7 @@ export default function App() {
   const [healthProfile, setHealthProfile] = useState<HealthProfileState>(initialHealthProfile);
   const [selectedDay, setSelectedDay] = useState<DayOfWeek>('Monday');
   const [selectedWorkoutId, setSelectedWorkoutId] = useState<WorkoutDayId>('workout-a');
-  const [weeklyMeals, setWeeklyMeals] = useState<Record<string, Meal[]>>(sampleWeeklyMealPlan);
+  const [weeklyMeals, setWeeklyMeals] = useState<Record<string, Meal[]>>(() => createWeeklyMealPlan(initialHealthProfile));
   const [workouts, setWorkouts] = useState(sampleWorkouts);
   const [dailyCheckIn, setDailyCheckIn] = useState<DailyCheckIn | null>(null);
   const [activeEvidence, setActiveEvidence] = useState<EvidenceCitation | null>(null);
@@ -48,7 +48,7 @@ export default function App() {
         carbs: newMealData.carbs,
         fat: newMealData.fat,
         subtitle: newMealData.desc,
-        whyThisMeal: `Swapped alternative maintaining zero gluten and zero peanuts, with ${newMealData.carbs}g carbohydrates explicitly documented for Type 1 Diabetes glucose tracking.`,
+        whyThisMeal: `Swapped alternative tailored to your selected health profile, with ${newMealData.carbs}g carbohydrates clearly documented.`,
       } : item),
     }));
   };
@@ -103,6 +103,7 @@ export default function App() {
     const handleOnboardingComplete = (name: string, profile: HealthProfileState) => {
       setUserName(name);
       setHealthProfile(profile);
+      setWeeklyMeals(createWeeklyMealPlan(profile));
       setCurrentTab('dashboard');
       setHasCompletedOnboarding(true);
     };
@@ -121,7 +122,7 @@ export default function App() {
           {currentTab === 'dashboard' && <DashboardScreen healthProfile={healthProfile} userName={userName} dailyCheckIn={dailyCheckIn} onSaveDailyCheckIn={handleDailyCheckIn} onNavigate={setCurrentTab} onOpenAdjustments={() => setIsAdjustmentsOpen(true)} />}
           {currentTab === 'meals' && <MealPlanScreen weeklyMeals={weeklyMeals} selectedDay={selectedDay} onSelectDay={setSelectedDay} onOpenEvidence={setActiveEvidence} onOpenSwapMeal={(meal, day) => setSwapModalMeal({ meal, day })} onAddSnack={handleAddSnack} />}
           {currentTab === 'workouts' && <WorkoutPlanScreen workouts={workouts} selectedWorkoutId={selectedWorkoutId} onSelectWorkout={setSelectedWorkoutId} onOpenEvidence={setActiveEvidence} onOpenExerciseAlternative={(exercise, workoutTitle) => setExerciseModalData({ exercise, workoutTitle })} />}
-          {currentTab === 'profile' && <HealthProfileScreen initialProfile={healthProfile} onSaveProfile={setHealthProfile} />}
+          {currentTab === 'profile' && <HealthProfileScreen initialProfile={healthProfile} onSaveProfile={(profile) => { setHealthProfile(profile); setWeeklyMeals(createWeeklyMealPlan(profile)); }} />}
           {currentTab === 'pricing' && <PricingScreen />}
           {currentTab === 'settings' && <SettingsScreen language={language} onLanguageChange={setLanguage} isNightMode={isNightMode} onToggleNightMode={() => setIsNightMode((current) => !current)} />}
         </main>
