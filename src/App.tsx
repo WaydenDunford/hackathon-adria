@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavTab, DayOfWeek, WorkoutDayId, Meal, Exercise, EvidenceCitation, HealthProfileState, DailyCheckIn } from './types';
 import { createWeeklyMealPlan, initialHealthProfile, sampleWorkouts } from './data/mockData';
 import { Navigation } from './components/Navigation';
@@ -34,6 +34,10 @@ export default function App() {
   const [isNightMode, setIsNightMode] = useState(false);
   const [language, setLanguage] = useState('EN');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentTab]);
 
   const handleConfirmSwap = (newMealData: { name: string; calories: number; protein: number; carbs: number; fat: number; desc: string }) => {
     if (!swapModalMeal) return;
