@@ -1,8 +1,10 @@
 import React from 'react';
+import type { Safeguards } from '../api/client';
 import { X, ShieldCheck, CheckCircle2, AlertTriangle, ArrowRight, BookOpen } from 'lucide-react';
 import { EvidenceCitation } from '../types';
 
 interface HealthAdjustmentsModalProps {
+  safeguards: Safeguards;
   isOpen: boolean;
   onClose: () => void;
   onViewEvidence: (ev: EvidenceCitation) => void;
@@ -10,6 +12,7 @@ interface HealthAdjustmentsModalProps {
 }
 
 export const HealthAdjustmentsModal: React.FC<HealthAdjustmentsModalProps> = ({
+  safeguards,
   isOpen,
   onClose,
   onViewEvidence,
@@ -17,29 +20,7 @@ export const HealthAdjustmentsModal: React.FC<HealthAdjustmentsModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const modifiedExercises = [
-    {
-      original: 'Barbell Back Squat',
-      modified: 'Goblet Squat (Chest-Loaded)',
-      reason: 'Lower-back limitation (L4-S1 disc compression risk)',
-      impact: 'Reduces spinal compressive forces by ~38% through anterior counter-balancing while training full quad depth.',
-      category: 'Workout A',
-    },
-    {
-      original: 'Bent-Over Barbell Row',
-      modified: 'Incline Chest-Supported Dumbbell Row',
-      reason: 'Lower-back limitation (eliminates unsupported torso cantilever)',
-      impact: 'Sternum support removes isometric shear stress on lumbar erectors, keeping focus on lats and rhomboids.',
-      category: 'Workout A',
-    },
-    {
-      original: 'Heavy Romanian Deadlift',
-      modified: 'Single-Leg Hip Thrust / Glute Bridge',
-      reason: 'Lower-back limitation (hinging shear elimination)',
-      impact: 'Supine horizontal spine angle isolates gluteus maximus without loading lumbar intervertebral discs.',
-      category: 'Workout B',
-    },
-  ];
+  const modifiedExercises = safeguards.modifiedExercises;
 
   return (
     <div
@@ -64,11 +45,11 @@ export const HealthAdjustmentsModal: React.FC<HealthAdjustmentsModalProps> = ({
                   Verification Report
                 </span>
                 <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                  100% Plan Audited
+                  Demo Rules Applied
                 </span>
               </div>
               <h3 className="text-base font-bold text-slate-900 mt-0.5">
-                Clinical Health Adjustments &amp; Audit Log
+                Health Adjustments &amp; Plan Review
               </h3>
             </div>
           </div>
@@ -91,9 +72,9 @@ export const HealthAdjustmentsModal: React.FC<HealthAdjustmentsModalProps> = ({
               <div className="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/50 flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-bold text-slate-900 text-sm">21 / 21 Meals Checked</div>
+                  <div className="font-bold text-slate-900 text-sm">{safeguards.mealCount} / {safeguards.mealCount} Meals Checked</div>
                   <div className="text-xs text-slate-600 mt-0.5">
-                    Zero gluten cross-contamination. 100% certified celiac-safe grain protocols.
+                    Stored dietary tags: {safeguards.preferences.join(', ') || 'No dietary preference'}.
                   </div>
                 </div>
               </div>
@@ -101,9 +82,9 @@ export const HealthAdjustmentsModal: React.FC<HealthAdjustmentsModalProps> = ({
               <div className="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/50 flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-bold text-slate-900 text-sm">21 / 21 Meals Peanut-Free</div>
+                  <div className="font-bold text-slate-900 text-sm">{safeguards.mealCount} Meals Filtered</div>
                   <div className="text-xs text-slate-600 mt-0.5">
-                    Verified allergen exclusion with peanut-free facility sourcing.
+                    Allergy filters: {safeguards.allergies.join(', ') || 'No recorded allergies'}.
                   </div>
                 </div>
               </div>
@@ -121,9 +102,9 @@ export const HealthAdjustmentsModal: React.FC<HealthAdjustmentsModalProps> = ({
               <div className="p-3.5 rounded-xl border border-amber-200 bg-amber-50/50 flex items-start gap-3">
                 <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-bold text-slate-900 text-sm">3 Exercises Modified</div>
+                  <div className="font-bold text-slate-900 text-sm">{modifiedExercises.length} Exercises Modified</div>
                   <div className="text-xs text-slate-600 mt-0.5">
-                    18 / 18 reviewed exercises. 3 adapted specifically for lower-back safety.
+                    {safeguards.exerciseCount} exercises in the stored plan. {modifiedExercises.length} adaptations reflect your profile.
                   </div>
                 </div>
               </div>
@@ -136,7 +117,7 @@ export const HealthAdjustmentsModal: React.FC<HealthAdjustmentsModalProps> = ({
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
                 Exercise Modifications (Lower-Back Protection)
               </h4>
-              <span className="text-[11px] text-slate-500 font-medium">3 adjustments active</span>
+              <span className="text-[11px] text-slate-500 font-medium">{modifiedExercises.length} adjustments active</span>
             </div>
 
             <div className="space-y-3">
@@ -175,7 +156,7 @@ export const HealthAdjustmentsModal: React.FC<HealthAdjustmentsModalProps> = ({
           <div className="p-3.5 rounded-xl bg-slate-100/70 border border-slate-200 text-xs text-slate-600 flex items-start gap-2.5">
             <CheckCircle2 className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
             <p>
-              <strong className="text-slate-800">Targeted Precision:</strong> 15 of 18 exercises remained completely unmodified (e.g. Dumbbell Bench Press, Seated Shoulder Press). Favia Health only alters movements where clinical biomechanics warrant safety interventions.
+              <strong className="text-slate-800">Targeted Precision:</strong> {safeguards.exerciseCount - modifiedExercises.length} of {safeguards.exerciseCount} exercises have no profile-specific modification. These are simple demo rules, not medical advice.
             </p>
           </div>
         </div>

@@ -1,20 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Meal } from '../types';
-import { mockMealSwapOptions } from '../data/mockData';
+import { api, RecipeOption } from '../api/client';
 import { X, RefreshCw, CheckCircle2, ShieldCheck, Flame } from 'lucide-react';
 
 interface SwapMealModalProps {
   meal: Meal | null;
   day: string;
   onClose: () => void;
-  onConfirmSwap: (newMealData: {
-    name: string;
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-    desc: string;
-  }) => void;
+  onConfirmSwap: (option: RecipeOption) => Promise<boolean>;
 }
 
 export const SwapMealModal: React.FC<SwapMealModalProps> = ({
@@ -23,9 +16,21 @@ export const SwapMealModal: React.FC<SwapMealModalProps> = ({
   onClose,
   onConfirmSwap,
 }) => {
+  const [options, setOptions] = useState<RecipeOption[]>([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  useEffect(() => {
+    if (!meal) return;
+    let active = true;
+    setLoading(true); setOptions([]); setError('');
+    api<RecipeOption[]>(`/user-meals/${meal.id}/alternatives`)
+      .then(items => { if (active) setOptions(items); })
+      .catch(failure => { if (active) setError(failure.message); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [meal?.id]);
   if (!meal) return null;
-
-  const options = mockMealSwapOptions[meal.type] || [];
 
   return (
     <div
@@ -62,9 +67,12 @@ export const SwapMealModal: React.FC<SwapMealModalProps> = ({
 
         <div className="p-5 space-y-3 max-h-[70vh] overflow-y-auto">
           <p className="text-xs text-slate-600">
-            All alternatives are pre-screened to ensure <strong>100% gluten-free</strong>, <strong>peanut-free</strong>, and have quantified carbohydrates for <strong>Type 1 Diabetes</strong>.
+            Alternatives are filtered using your saved allergies, dietary preferences, and the demo recipe ingredient tags.
           </p>
 
+          {loading && <p role="status" className="text-xs text-slate-500">Loading alternatives…</p>}
+          {error && <p role="alert" className="text-xs text-rose-700">{error}</p>}
+          {!loading && !error && options.length === 0 && <p className="text-xs text-slate-500">No compatible alternatives available.</p>}
           <div className="space-y-2.5 pt-1">
             {options.map((opt, idx) => {
               const isCurrent = opt.name.toLowerCase() === meal.name.toLowerCase();
@@ -102,11 +110,13 @@ export const SwapMealModal: React.FC<SwapMealModalProps> = ({
                     </div>
 
                     <button
-                      onClick={() => {
-                        onConfirmSwap(opt);
-                        onClose();
+                      onClick={async () => {
+                        setSaving(true);
+                        const saved = await onConfirmSwap(opt);
+                        setSaving(false);
+                        if (!saved) setError('Unable to save this replacement. Please try again.');
                       }}
-                      disabled={isCurrent}
+                      disabled={isCurrent || saving}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 ${
                         isCurrent
                           ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
@@ -125,7 +135,7 @@ export const SwapMealModal: React.FC<SwapMealModalProps> = ({
         <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
           <span className="flex items-center gap-1 text-emerald-700 font-medium">
             <ShieldCheck className="w-3.5 h-3.5" />
-            Guaranteed allergen &amp; condition safe
+            Matched against stored ingredient tags
           </span>
           <button
             onClick={onClose}

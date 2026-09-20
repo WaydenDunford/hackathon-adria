@@ -4,7 +4,7 @@ import { DailyCheckIn } from '../types';
 
 interface DailyCheckInCardProps {
   checkIn: DailyCheckIn | null;
-  onSave: (draft: Omit<DailyCheckIn, 'date' | 'completedAt' | 'planAdjusted' | 'adjustmentSummary'>) => void;
+  onSave: (draft: Omit<DailyCheckIn, 'date' | 'completedAt' | 'planAdjusted' | 'adjustmentSummary'>) => Promise<boolean>;
   onViewPlan: () => void;
 }
 
@@ -27,9 +27,10 @@ export function DailyCheckInCard({ checkIn, onSave, onViewPlan }: DailyCheckInCa
     if (!pendingAdjustment) return;
     setAdjustmentStage(0);
     const stageTimers = adjustmentStages.slice(1).map((_, index) => window.setTimeout(() => setAdjustmentStage(index + 1), (index + 1) * 1100));
-    const completeTimer = window.setTimeout(() => {
-      onSave(pendingAdjustment);
+    const completeTimer = window.setTimeout(async () => {
+      const saved = await onSave(pendingAdjustment);
       setPendingAdjustment(null);
+      if (!saved) return;
       setNote('');
       setIsOpen(false);
     }, 4700);
@@ -39,8 +40,8 @@ export function DailyCheckInCard({ checkIn, onSave, onViewPlan }: DailyCheckInCa
     };
   }, [onSave, pendingAdjustment]);
 
-  const saveFine = () => {
-    onSave({ energy: 'same', pain: 'none', affectedAreas: [], recovery: 'okay', note: '' });
+  const saveFine = async () => {
+    if (!await onSave({ energy: 'same', pain: 'none', affectedAreas: [], recovery: 'okay', note: '' })) return;
     setIsOpen(false);
   };
 

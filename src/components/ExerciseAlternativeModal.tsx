@@ -18,42 +18,7 @@ export const ExerciseAlternativeModal: React.FC<ExerciseAlternativeModalProps> =
 }) => {
   if (!exercise) return null;
 
-  // Curate alternatives based on exercise
-  const alternativesList = exercise.isModified
-    ? [
-        {
-          name: exercise.name,
-          status: 'Currently Active (Safest for Lower Back)',
-          desc: 'Primary clinical prescription with minimal axial compressive forces.',
-          isCurrent: true,
-        },
-        {
-          name: 'Belt Squat or Leg Press (Neutral Back Support)',
-          status: 'Machine Alternative',
-          desc: 'Removes spinal loading entirely by applying load through the hips or reclined sled.',
-          isCurrent: false,
-        },
-        {
-          name: 'Bodyweight Box Squat with Bands',
-          status: 'Low-Load Mobility Option',
-          desc: 'Useful for days with mild lower back soreness while maintaining knee and hip kinematics.',
-          isCurrent: false,
-        },
-      ]
-    : [
-        {
-          name: exercise.name,
-          status: 'Currently Active',
-          desc: 'Standard mechanical form without modification.',
-          isCurrent: true,
-        },
-        {
-          name: 'Cable or Resistance Band Variation',
-          status: 'Joint-Friendly Alternative',
-          desc: 'Provides continuous smooth tension profile.',
-          isCurrent: false,
-        },
-      ];
+  const alternativesList = exercise.alternatives || [];
 
   return (
     <div

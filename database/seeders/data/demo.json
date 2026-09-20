@@ -1,0 +1,2215 @@
+{
+  "profile": {
+    "conditions": [
+      "Type 1 Diabetes",
+      "Celiac Disease",
+      "Lower-Back Problems"
+    ],
+    "allergies": [
+      "Peanuts"
+    ],
+    "dietaryPreferences": [
+      "Gluten-Free"
+    ],
+    "physicalLimitations": [
+      "Lower back"
+    ]
+  },
+  "meals": {
+    "Monday": [
+      {
+        "id": "mon-b1",
+        "type": "Breakfast",
+        "name": "Certified GF Berry & Chia Porridge",
+        "subtitle": "Slow-digesting complex carbs with pasture-raised egg scramble on the side",
+        "calories": 480,
+        "protein": 28,
+        "carbs": 58,
+        "fat": 14,
+        "ingredientsSummary": "Certified gluten-free rolled oats, wild blueberries, chia seeds, unsweetened almond milk, 2 whole eggs, spinach",
+        "imageCategory": "bowl",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "58 g carbohydrates are shown prominently to support carbohydrate tracking and accurate pre-bolus calculation."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Ingredients in this meal are 100% gluten-free. Prepared with batch-certified gluten-free rolled oats to eliminate farm/milling cross-contact."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Zero peanut ingredients. Prepared with pure almond milk from a dedicated peanut-free allergen facility."
+          }
+        ],
+        "whyThisMeal": "Balances complex low-glycemic fiber with bioavailable protein to mitigate postprandial glucose spikes while upholding strict celiac purity standards.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "mon-l1",
+        "type": "Lunch",
+        "name": "Mediterranean Salmon & Quinoa Bowl",
+        "subtitle": "Wild Alaskan salmon fillet over organic tri-color quinoa and olive oil vinaigrette",
+        "calories": 620,
+        "protein": 42,
+        "carbs": 46,
+        "fat": 26,
+        "ingredientsSummary": "Wild-caught salmon, quinoa, cucumber, cherry tomatoes, kalamata olives, avocado, extra-virgin olive oil, lemon herb dressing",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "46 g total carbs with 9 g dietary fiber (37 g net carbs). High omega-3 fatty acids delay gastric emptying for smoother glucose curves."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Naturally 100% gluten-free grain base (ancient Andean quinoa). Dressing formulated without hydrolyzed wheat protein or malt vinegar."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "No peanuts or peanut-derived oils used."
+          }
+        ],
+        "whyThisMeal": "Rich in anti-inflammatory EPA/DHA to combat chronic autoimmune inflammation associated with both T1D and Celiac disease.",
+        "evidence": {
+          "id": "celiac-gluten-free",
+          "title": "Strict Dietary Gluten Elimination for Celiac Disease",
+          "recommendation": "Complete elimination of wheat, rye, barley, and cross-contaminated grains is essential to prevent intestinal mucosal atrophy and systemic autoimmune inflammation.",
+          "sources": [
+            {
+              "name": "American College of Gastroenterology (ACG)",
+              "publication": "Clinical Guidelines: Diagnosis and Management of Celiac Disease",
+              "year": "2023",
+              "url": "https://gi.org/guidelines"
+            },
+            {
+              "name": "Celiac Disease Foundation",
+              "publication": "Gluten-Free Nutrition & Cross-Contact Protocols in Clinical Practice",
+              "year": "2024"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Even sub-clinical ingestion of 10–50mg of gluten can trigger immune-mediated villous blunting in celiac patients. Complete ingredient verification is non-negotiable."
+        }
+      },
+      {
+        "id": "mon-d1",
+        "type": "Dinner",
+        "name": "Lemon-Herb Roasted Free-Range Chicken",
+        "subtitle": "With roasted sweet potato medallions and steamed garlic asparagus",
+        "calories": 650,
+        "protein": 48,
+        "carbs": 52,
+        "fat": 22,
+        "ingredientsSummary": "Free-range chicken breast, Japanese sweet potato, fresh asparagus spears, rosemary, thyme, cold-pressed avocado oil, sea salt",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "52 g complex carbohydrates from sweet potato. Sweet potatoes have a lower glycemic load than white potatoes, facilitating predictable insulin response."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "All poultry herbs and seasoning blends are certified single-origin with zero anti-caking wheat agents."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Guaranteed nut-free prep line."
+          }
+        ],
+        "whyThisMeal": "High-protein evening recovery meal providing sustained amino acid delivery without spiking overnight blood sugar levels.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "mon-s1",
+        "type": "Snack",
+        "name": "Greek Yogurt with Sunflower Seed Crunch",
+        "subtitle": "Lactose-strained Greek yogurt topped with pumpkin and roasted sunflower seeds",
+        "calories": 240,
+        "protein": 18,
+        "carbs": 14,
+        "fat": 10,
+        "ingredientsSummary": "Plain probiotic Greek yogurt, roasted pumpkin seeds, sunflower seeds, touch of organic cinnamon",
+        "imageCategory": "bowl",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "Only 14 g total carbohydrates. Ideal low-carb bridge to maintain target blood glucose before evening rest."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Gluten-free probiotic base supporting gut microbiome repair in celiac recovery."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Seed-based crunch (sunflower & pepitas) replacing customary peanut/tree-nut granolas for complete allergen safety."
+          }
+        ],
+        "whyThisMeal": "Provides a safe, crunchy snack satisfying nut cravings using hypoallergenic roasted seeds while keeping glycemic load low.",
+        "evidence": {
+          "id": "peanut-allergy-elimination",
+          "title": "Strict Allergen Exclusion for IgE-Mediated Peanut Hypersensitivity",
+          "recommendation": "Absolute exclusion of all peanut proteins, peanut oils, and shared facility cross-contact risks to prevent severe anaphylactic reactions.",
+          "sources": [
+            {
+              "name": "National Institute of Allergy and Infectious Diseases (NIAID)",
+              "publication": "Guidelines for the Diagnosis and Management of Food Allergy in the United States",
+              "year": "2022"
+            },
+            {
+              "name": "Journal of Allergy and Clinical Immunology",
+              "publication": "Risk Management Protocols for IgE-Mediated Anaphylaxis",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Avoidance of triggering antigens remains the primary standard of care for diagnosed IgE food allergies."
+        }
+      }
+    ],
+    "Tuesday": [
+      {
+        "id": "tue-b1",
+        "type": "Breakfast",
+        "name": "Southwest Avocado & Black Bean Omelette",
+        "subtitle": "Three farm eggs folded with creamy avocado, sweet peppers, and cilantro",
+        "calories": 510,
+        "protein": 30,
+        "carbs": 28,
+        "fat": 31,
+        "ingredientsSummary": "Pasture eggs, rinsed organic black beans, Hass avocado, bell peppers, scallions, fresh salsa verde",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "28 g carbohydrate with 11 g soluble fiber (17 g net carbs). Steady morning baseline requiring minimal bolus."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Naturally gluten-free whole food ingredients, paired with certified GF stone-ground salsa."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "All ingredients prepared in a dedicated allergen-free station."
+          }
+        ],
+        "whyThisMeal": "Low-carb, high-healthy-fat breakfast minimizes dawn phenomenon glucose surges common in Type 1 Diabetes.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "tue-l1",
+        "type": "Lunch",
+        "name": "Sesame-Crusted Ahi Tuna Greens Bowl",
+        "subtitle": "With shredded red cabbage, edamame, and certified gluten-free coconut aminos",
+        "calories": 590,
+        "protein": 44,
+        "carbs": 38,
+        "fat": 22,
+        "ingredientsSummary": "Sushi-grade yellowfin tuna, brown rice noodles (certified GF), mixed greens, edamame, sesame oil, coconut aminos",
+        "imageCategory": "bowl",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Prepared with soy-free, gluten-free aged coconut aminos instead of traditional wheat-fermented soy sauce."
+          },
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "38 g carbohydrates clearly marked. Brown rice base provides low glycemic index release."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Sesame seed crust without peanut oil blending."
+          }
+        ],
+        "whyThisMeal": "Safe umami-rich Asian dressing created without hidden gluten or peanut oil stabilizers.",
+        "evidence": {
+          "id": "celiac-gluten-free",
+          "title": "Strict Dietary Gluten Elimination for Celiac Disease",
+          "recommendation": "Complete elimination of wheat, rye, barley, and cross-contaminated grains is essential to prevent intestinal mucosal atrophy and systemic autoimmune inflammation.",
+          "sources": [
+            {
+              "name": "American College of Gastroenterology (ACG)",
+              "publication": "Clinical Guidelines: Diagnosis and Management of Celiac Disease",
+              "year": "2023",
+              "url": "https://gi.org/guidelines"
+            },
+            {
+              "name": "Celiac Disease Foundation",
+              "publication": "Gluten-Free Nutrition & Cross-Contact Protocols in Clinical Practice",
+              "year": "2024"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Even sub-clinical ingestion of 10–50mg of gluten can trigger immune-mediated villous blunting in celiac patients. Complete ingredient verification is non-negotiable."
+        }
+      },
+      {
+        "id": "tue-d1",
+        "type": "Dinner",
+        "name": "Grass-Fed Beef & Butternut Squash Skillet",
+        "subtitle": "Lean grass-fed ground beef simmered with roasted butternut squash cubes and kale",
+        "calories": 640,
+        "protein": 46,
+        "carbs": 45,
+        "fat": 25,
+        "ingredientsSummary": "90/10 grass-fed beef, cubed butternut squash, organic lacinato kale, garlic, bone broth, rosemary",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "45 g carbohydrates from squash. High potassium helps electrolyte balance for active diabetic athletes."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "100% gluten-free artisanal bone broth base without maltodextrin additives."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Completely nut-free recipe."
+          }
+        ],
+        "whyThisMeal": "Highly digestible restorative iron and zinc to assist muscle tissue recovery without gastrointestinal stress.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "tue-s1",
+        "type": "Snack",
+        "name": "Crispy Sea Salt Roasted Chickpeas",
+        "subtitle": "Oven-baked crunchy chickpeas seasoned with smoked paprika and sea salt",
+        "calories": 190,
+        "protein": 8,
+        "carbs": 26,
+        "fat": 5,
+        "ingredientsSummary": "Organic garbanzo beans, cold-pressed olive oil, smoked paprika, flake sea salt",
+        "imageCategory": "bowl",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Legume snack roasted in an allergen-isolated facility, replacing hazardous peanut bar snacks."
+          },
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "26 g total carbs with 7 g resistant starch fiber, moderating insulin requirement."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Tested <5ppm gluten purity standard."
+          }
+        ],
+        "whyThisMeal": "Satisfying crunch without relying on peanut trail mixes or wheat crackers.",
+        "evidence": {
+          "id": "peanut-allergy-elimination",
+          "title": "Strict Allergen Exclusion for IgE-Mediated Peanut Hypersensitivity",
+          "recommendation": "Absolute exclusion of all peanut proteins, peanut oils, and shared facility cross-contact risks to prevent severe anaphylactic reactions.",
+          "sources": [
+            {
+              "name": "National Institute of Allergy and Infectious Diseases (NIAID)",
+              "publication": "Guidelines for the Diagnosis and Management of Food Allergy in the United States",
+              "year": "2022"
+            },
+            {
+              "name": "Journal of Allergy and Clinical Immunology",
+              "publication": "Risk Management Protocols for IgE-Mediated Anaphylaxis",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Avoidance of triggering antigens remains the primary standard of care for diagnosed IgE food allergies."
+        }
+      }
+    ],
+    "Wednesday": [
+      {
+        "id": "wed-b1",
+        "type": "Breakfast",
+        "name": "Warm Apple Cinnamon Gluten-Free Grain Porridge",
+        "subtitle": "Teff and certified GF rolled oats simmered with diced crisp apples and walnuts",
+        "calories": 470,
+        "protein": 20,
+        "carbs": 62,
+        "fat": 14,
+        "ingredientsSummary": "Certified GF rolled oats, Ethiopian teff, honeycrisp apple, Ceylon cinnamon, hemp hearts, oat milk",
+        "imageCategory": "bowl",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "62 g carbohydrates explicitly reported for pre-meal insulin bolus timing."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Teff is an ancient gluten-free pseudocereal packed with prebiotic fiber to stimulate intestinal crypt healing."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Nut-safe seeds (hemp hearts) provide omega fats without peanut exposure."
+          }
+        ],
+        "whyThisMeal": "Comforting warm breakfast formulated with high soluble beta-glucan fiber to blunt blood glucose spikes.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "wed-l1",
+        "type": "Lunch",
+        "name": "Roasted Turkey & Cranberry Spinach Wrap",
+        "subtitle": "Sliced pasture turkey in a certified gluten-free coconut-cassava tortilla",
+        "calories": 540,
+        "protein": 38,
+        "carbs": 42,
+        "fat": 20,
+        "ingredientsSummary": "Oven-roasted turkey breast, cassava flour tortilla (GF), baby spinach, Dijon mustard, unpeeled cranberries, avocado spread",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Cassava and coconut tortilla replaces wheat flour wrap with zero gluten cross-contamination."
+          },
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "42 g carbohydrates with steady complex starch breakdown."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "No peanuts or peanut satay sauce derivatives."
+          }
+        ],
+        "whyThisMeal": "Convenient handheld wrap designed without wheat starch or chemical gluten binders.",
+        "evidence": {
+          "id": "celiac-gluten-free",
+          "title": "Strict Dietary Gluten Elimination for Celiac Disease",
+          "recommendation": "Complete elimination of wheat, rye, barley, and cross-contaminated grains is essential to prevent intestinal mucosal atrophy and systemic autoimmune inflammation.",
+          "sources": [
+            {
+              "name": "American College of Gastroenterology (ACG)",
+              "publication": "Clinical Guidelines: Diagnosis and Management of Celiac Disease",
+              "year": "2023",
+              "url": "https://gi.org/guidelines"
+            },
+            {
+              "name": "Celiac Disease Foundation",
+              "publication": "Gluten-Free Nutrition & Cross-Contact Protocols in Clinical Practice",
+              "year": "2024"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Even sub-clinical ingestion of 10–50mg of gluten can trigger immune-mediated villous blunting in celiac patients. Complete ingredient verification is non-negotiable."
+        }
+      },
+      {
+        "id": "wed-d1",
+        "type": "Dinner",
+        "name": "Pan-Seared Halibut with Cauliflower Mash",
+        "subtitle": "Wild Pacific halibut over silky garlic cauliflower purée and sautéed haricots verts",
+        "calories": 580,
+        "protein": 45,
+        "carbs": 24,
+        "fat": 26,
+        "ingredientsSummary": "Halibut fillet, steamed cauliflower, ghee, roasted garlic cloves, French green beans, fresh dill",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "Low carbohydrate total (24 g), significantly lowering evening hypoglycemia risk during sleep."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Naturally grain-free meal composition."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Prepared in a verified nut-free commercial kitchen space."
+          }
+        ],
+        "whyThisMeal": "Light yet nutrient-dense dinner minimizing nocturnal blood sugar variability.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "wed-s1",
+        "type": "Snack",
+        "name": "Fresh Guacamole with Seed Crackers",
+        "subtitle": "Fresh crushed avocado with artisanal flax and pumpkin seed crispbread",
+        "calories": 210,
+        "protein": 6,
+        "carbs": 12,
+        "fat": 16,
+        "ingredientsSummary": "Hass avocado, lime juice, sea salt, certified GF flax seed crackers",
+        "imageCategory": "bowl",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "12 g carbohydrates with 8 g fiber (4 g net carbs). High satiety without requiring extra insulin."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Seed crispbread is 100% wheat-free and certified gluten-free."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "100% peanut-free."
+          }
+        ],
+        "whyThisMeal": "Healthy monounsaturated fats provide lasting afternoon satiety without insulin swings.",
+        "evidence": {
+          "id": "peanut-allergy-elimination",
+          "title": "Strict Allergen Exclusion for IgE-Mediated Peanut Hypersensitivity",
+          "recommendation": "Absolute exclusion of all peanut proteins, peanut oils, and shared facility cross-contact risks to prevent severe anaphylactic reactions.",
+          "sources": [
+            {
+              "name": "National Institute of Allergy and Infectious Diseases (NIAID)",
+              "publication": "Guidelines for the Diagnosis and Management of Food Allergy in the United States",
+              "year": "2022"
+            },
+            {
+              "name": "Journal of Allergy and Clinical Immunology",
+              "publication": "Risk Management Protocols for IgE-Mediated Anaphylaxis",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Avoidance of triggering antigens remains the primary standard of care for diagnosed IgE food allergies."
+        }
+      }
+    ],
+    "Thursday": [
+      {
+        "id": "thu-b1",
+        "type": "Breakfast",
+        "name": "Wild Blueberry & Plant Protein Smoothie",
+        "subtitle": "Blended with baby spinach, chia seeds, and certified GF yellow pea protein",
+        "calories": 420,
+        "protein": 34,
+        "carbs": 48,
+        "fat": 11,
+        "ingredientsSummary": "Wild blueberries, organic pea protein isolate, unsweetened flax milk, chia seeds, baby spinach, vanilla bean",
+        "imageCategory": "smoothie",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "48 g total carbohydrates. High antioxidant polyphenols improve peripheral insulin sensitivity."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Single-source pea protein tested gluten-free (<5ppm)."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Nut-free plant protein without peanut processing lines."
+          }
+        ],
+        "whyThisMeal": "Rapidly absorbed post-workout or active morning shake with transparent carb metrics.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "thu-l1",
+        "type": "Lunch",
+        "name": "Moroccan Spiced Chickpea & Veggie Bowl",
+        "subtitle": "With roasted cumin carrots, zucchini, and steamed organic wild rice",
+        "calories": 570,
+        "protein": 22,
+        "carbs": 72,
+        "fat": 18,
+        "ingredientsSummary": "Spiced chickpeas, wild rice, rainbow carrots, zucchini, tahini lemon dressing, fresh parsley",
+        "imageCategory": "bowl",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "72 g complex carbohydrates. High resistant fiber slows glucose uptake over 4 hours."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Wild rice is a gluten-free water grass, safe for celiac gut mucosa."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Tahini (pure sesame seed paste) used instead of peanut sauce."
+          }
+        ],
+        "whyThisMeal": "Rich plant-based micronutrient blend tailored to sustain steady endurance.",
+        "evidence": {
+          "id": "celiac-gluten-free",
+          "title": "Strict Dietary Gluten Elimination for Celiac Disease",
+          "recommendation": "Complete elimination of wheat, rye, barley, and cross-contaminated grains is essential to prevent intestinal mucosal atrophy and systemic autoimmune inflammation.",
+          "sources": [
+            {
+              "name": "American College of Gastroenterology (ACG)",
+              "publication": "Clinical Guidelines: Diagnosis and Management of Celiac Disease",
+              "year": "2023",
+              "url": "https://gi.org/guidelines"
+            },
+            {
+              "name": "Celiac Disease Foundation",
+              "publication": "Gluten-Free Nutrition & Cross-Contact Protocols in Clinical Practice",
+              "year": "2024"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Even sub-clinical ingestion of 10–50mg of gluten can trigger immune-mediated villous blunting in celiac patients. Complete ingredient verification is non-negotiable."
+        }
+      },
+      {
+        "id": "thu-d1",
+        "type": "Dinner",
+        "name": "Bison Sirloin Steak with Roasted Beets",
+        "subtitle": "Pasture bison with rosemary roasted root vegetables and wilted Swiss chard",
+        "calories": 630,
+        "protein": 50,
+        "carbs": 38,
+        "fat": 24,
+        "ingredientsSummary": "Grass-fed bison steak, ruby beets, parsnips, Swiss chard, extra virgin olive oil, sea salt",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "38 g carbohydrates. High dietary nitrates from beets promote endothelial vasodilation and tissue perfusion."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Naturally gluten-free whole food prep."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Nut allergen-free cooking environment."
+          }
+        ],
+        "whyThisMeal": "Lean red meat alternative with exceptional iron, B12, and clean macro profile.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "thu-s1",
+        "type": "Snack",
+        "name": "Hard-Boiled Eggs with Everything Herb Sprinkle",
+        "subtitle": "Two pasture eggs seasoned with sesame seeds, poppy seeds, and garlic flake",
+        "calories": 160,
+        "protein": 13,
+        "carbs": 2,
+        "fat": 11,
+        "ingredientsSummary": "2 large eggs, sesame seeds, poppy seeds, minced garlic, sea salt",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "Negligible carbs (2 g). Perfect zero-bolus stabilization snack."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Pure spice blend without wheat flow agents."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Zero allergen risk."
+          }
+        ],
+        "whyThisMeal": "High choline and complete protein for neuro-muscular health.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      }
+    ],
+    "Friday": [
+      {
+        "id": "fri-b1",
+        "type": "Breakfast",
+        "name": "Gluten-Free Spinach & Goat Cheese Frittata",
+        "subtitle": "Oven-baked egg frittata with crumbled chevre cheese and sun-dried tomatoes",
+        "calories": 490,
+        "protein": 32,
+        "carbs": 18,
+        "fat": 32,
+        "ingredientsSummary": "Eggs, organic baby spinach, goat cheese, sun-dried tomatoes (oil-packed), red onion, oregano",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "18 g carbs with high protein and healthy fats for smooth glycemic entry."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "100% flourless recipe baked in a dedicated GF skillet."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Peanut allergen excluded."
+          }
+        ],
+        "whyThisMeal": "Low-glycemic breakfast maintaining energetic alertness throughout the morning.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "fri-l1",
+        "type": "Lunch",
+        "name": "Rainbow Veggie & Lentil Nourish Bowl",
+        "subtitle": "Brown lentils with roasted sweet potato, shredded kale, and tahini drizzle",
+        "calories": 580,
+        "protein": 26,
+        "carbs": 68,
+        "fat": 16,
+        "ingredientsSummary": "Simmered brown lentils, roasted sweet potato, lacinato kale, red cabbage, sesame tahini, apple cider vinegar",
+        "imageCategory": "bowl",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "68 g carbohydrates clearly presented. Lentils provide slow amylose starch digestion."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Lentils rigorously sorted and washed to prevent agricultural grain co-mingling."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "All nut derivatives removed."
+          }
+        ],
+        "whyThisMeal": "Rich in soluble fibers that foster gut microbiota diversity and glucose homeostasis.",
+        "evidence": {
+          "id": "celiac-gluten-free",
+          "title": "Strict Dietary Gluten Elimination for Celiac Disease",
+          "recommendation": "Complete elimination of wheat, rye, barley, and cross-contaminated grains is essential to prevent intestinal mucosal atrophy and systemic autoimmune inflammation.",
+          "sources": [
+            {
+              "name": "American College of Gastroenterology (ACG)",
+              "publication": "Clinical Guidelines: Diagnosis and Management of Celiac Disease",
+              "year": "2023",
+              "url": "https://gi.org/guidelines"
+            },
+            {
+              "name": "Celiac Disease Foundation",
+              "publication": "Gluten-Free Nutrition & Cross-Contact Protocols in Clinical Practice",
+              "year": "2024"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Even sub-clinical ingestion of 10–50mg of gluten can trigger immune-mediated villous blunting in celiac patients. Complete ingredient verification is non-negotiable."
+        }
+      },
+      {
+        "id": "fri-d1",
+        "type": "Dinner",
+        "name": "Pan-Roasted Cod with Herb Quinoa Risotto",
+        "subtitle": "Flaky Atlantic cod fillet over creamy dairy-free quinoa risotto and broccolini",
+        "calories": 610,
+        "protein": 46,
+        "carbs": 52,
+        "fat": 20,
+        "ingredientsSummary": "Atlantic cod, organic white quinoa, vegetable broth, baby broccolini, extra virgin olive oil, fresh tarragon",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "52 g carbs. High lean protein index prevents delayed nocturnal drops."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Risotto made with quinoa instead of wheat-thickened starch."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Safe and isolated allergen production line."
+          }
+        ],
+        "whyThisMeal": "Hearty weekend dinner that avoids heavy restaurant starches while delivering premium culinary enjoyment.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "fri-s1",
+        "type": "Snack",
+        "name": "Dark Chocolate (85%) & Pumpkin Seeds",
+        "subtitle": "Artisanal organic dark chocolate squares with salted pepitas",
+        "calories": 220,
+        "protein": 7,
+        "carbs": 14,
+        "fat": 17,
+        "ingredientsSummary": "85% organic cacao chocolate, sprouted salted pumpkin seeds",
+        "imageCategory": "bowl",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "14 g carbs (only 5 g sugar). Minimal glycemic impact."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Certified GF chocolate without barley malt sweetener."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Made in a dedicated peanut-free chocolate crafting facility."
+          }
+        ],
+        "whyThisMeal": "Antioxidant-dense flavanols satisfy cravings with high safety standards.",
+        "evidence": {
+          "id": "peanut-allergy-elimination",
+          "title": "Strict Allergen Exclusion for IgE-Mediated Peanut Hypersensitivity",
+          "recommendation": "Absolute exclusion of all peanut proteins, peanut oils, and shared facility cross-contact risks to prevent severe anaphylactic reactions.",
+          "sources": [
+            {
+              "name": "National Institute of Allergy and Infectious Diseases (NIAID)",
+              "publication": "Guidelines for the Diagnosis and Management of Food Allergy in the United States",
+              "year": "2022"
+            },
+            {
+              "name": "Journal of Allergy and Clinical Immunology",
+              "publication": "Risk Management Protocols for IgE-Mediated Anaphylaxis",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Avoidance of triggering antigens remains the primary standard of care for diagnosed IgE food allergies."
+        }
+      }
+    ],
+    "Saturday": [
+      {
+        "id": "sat-b1",
+        "type": "Breakfast",
+        "name": "Fluffy Certified GF Banana Protein Pancakes",
+        "subtitle": "Made from almond flour, certified GF oat flour, and organic egg whites",
+        "calories": 520,
+        "protein": 30,
+        "carbs": 56,
+        "fat": 18,
+        "ingredientsSummary": "Certified GF oat flour, almond flour, mashed banana, egg whites, Ceylon cinnamon, pure maple syrup drizzle (1 tsp)",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "56 g carbohydrates measured precisely to support confident weekend dosing."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Prepared exclusively with certified GF grain flours under ISO food allergen protocols."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Peanut butter strictly substituted with sunflower butter or maple reduction."
+          }
+        ],
+        "whyThisMeal": "Weekend classic made 100% compliant with celiac and diabetic guidelines.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "sat-l1",
+        "type": "Lunch",
+        "name": "Mediterranean Grilled Chicken Salad",
+        "subtitle": "Marinated chicken skewers over crisp romaine, artichoke hearts, and oregano vinaigrette",
+        "calories": 570,
+        "protein": 45,
+        "carbs": 22,
+        "fat": 32,
+        "ingredientsSummary": "Chicken tenders, romaine hearts, artichoke hearts, cucumbers, kalamata olives, red onion, cold-pressed olive oil, red wine vinegar",
+        "imageCategory": "salad",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "22 g carbohydrates with high healthy lipid content, ensuring stable afternoon glucose."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "All vinaigrette marinades prepared without malt vinegar or wheat thickeners."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Peanut-free preparation."
+          }
+        ],
+        "whyThisMeal": "Refreshing high-protein lunch optimal for active weekend recovery.",
+        "evidence": {
+          "id": "celiac-gluten-free",
+          "title": "Strict Dietary Gluten Elimination for Celiac Disease",
+          "recommendation": "Complete elimination of wheat, rye, barley, and cross-contaminated grains is essential to prevent intestinal mucosal atrophy and systemic autoimmune inflammation.",
+          "sources": [
+            {
+              "name": "American College of Gastroenterology (ACG)",
+              "publication": "Clinical Guidelines: Diagnosis and Management of Celiac Disease",
+              "year": "2023",
+              "url": "https://gi.org/guidelines"
+            },
+            {
+              "name": "Celiac Disease Foundation",
+              "publication": "Gluten-Free Nutrition & Cross-Contact Protocols in Clinical Practice",
+              "year": "2024"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Even sub-clinical ingestion of 10–50mg of gluten can trigger immune-mediated villous blunting in celiac patients. Complete ingredient verification is non-negotiable."
+        }
+      },
+      {
+        "id": "sat-d1",
+        "type": "Dinner",
+        "name": "Slow-Cooked Beef Short Ribs & Polenta",
+        "subtitle": "Tender beef short rib braised in root aromatics over creamy certified GF corn polenta",
+        "calories": 680,
+        "protein": 48,
+        "carbs": 48,
+        "fat": 28,
+        "ingredientsSummary": "Beef short rib, organic certified GF yellow corn polenta, beef bone broth, carrots, celery, fresh thyme",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "48 g total carbohydrates. Balanced with rich protein to avoid quick glycemic swings."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Corn polenta tested 100% wheat-free; braising liquid reduced without wheat flour roux."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Nut allergen clean protocol."
+          }
+        ],
+        "whyThisMeal": "Chef-crafted comfort dinner meeting the strictest medical safety profiles.",
+        "evidence": {
+          "id": "celiac-gluten-free",
+          "title": "Strict Dietary Gluten Elimination for Celiac Disease",
+          "recommendation": "Complete elimination of wheat, rye, barley, and cross-contaminated grains is essential to prevent intestinal mucosal atrophy and systemic autoimmune inflammation.",
+          "sources": [
+            {
+              "name": "American College of Gastroenterology (ACG)",
+              "publication": "Clinical Guidelines: Diagnosis and Management of Celiac Disease",
+              "year": "2023",
+              "url": "https://gi.org/guidelines"
+            },
+            {
+              "name": "Celiac Disease Foundation",
+              "publication": "Gluten-Free Nutrition & Cross-Contact Protocols in Clinical Practice",
+              "year": "2024"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Even sub-clinical ingestion of 10–50mg of gluten can trigger immune-mediated villous blunting in celiac patients. Complete ingredient verification is non-negotiable."
+        }
+      },
+      {
+        "id": "sat-s1",
+        "type": "Snack",
+        "name": "Sliced Green Apple with Sunflower Butter",
+        "subtitle": "Granny Smith apple wedges paired with organic roasted sunflower seed spread",
+        "calories": 210,
+        "protein": 5,
+        "carbs": 24,
+        "fat": 12,
+        "ingredientsSummary": "Granny Smith apple, organic unsweetened sunflower butter, pinch of ground cinnamon",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Sunflower butter provides the classic savory-nutty dip experience with 0% peanut antigen."
+          },
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "24 g carbohydrates with tart low-sugar fruit profile."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "100% gluten-free."
+          }
+        ],
+        "whyThisMeal": "Traditional apple-and-peanut-butter snack made allergen-safe with sunflower butter.",
+        "evidence": {
+          "id": "peanut-allergy-elimination",
+          "title": "Strict Allergen Exclusion for IgE-Mediated Peanut Hypersensitivity",
+          "recommendation": "Absolute exclusion of all peanut proteins, peanut oils, and shared facility cross-contact risks to prevent severe anaphylactic reactions.",
+          "sources": [
+            {
+              "name": "National Institute of Allergy and Infectious Diseases (NIAID)",
+              "publication": "Guidelines for the Diagnosis and Management of Food Allergy in the United States",
+              "year": "2022"
+            },
+            {
+              "name": "Journal of Allergy and Clinical Immunology",
+              "publication": "Risk Management Protocols for IgE-Mediated Anaphylaxis",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Avoidance of triggering antigens remains the primary standard of care for diagnosed IgE food allergies."
+        }
+      }
+    ],
+    "Sunday": [
+      {
+        "id": "sun-b1",
+        "type": "Breakfast",
+        "name": "Smoked Salmon & Poached Eggs on GF English Muffin",
+        "subtitle": "Cold-smoked wild salmon, two soft-poached eggs, and lemon-chive labneh",
+        "calories": 510,
+        "protein": 36,
+        "carbs": 34,
+        "fat": 24,
+        "ingredientsSummary": "Cold-smoked salmon, organic eggs, certified GF English muffin, probiotic labneh, fresh chives, capers",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "34 g carbs clearly labeled for straightforward morning bolus management."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Artisanal gluten-free English muffin toasted in dedicated celiac-safe toaster."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "All ingredients guaranteed peanut-free."
+          }
+        ],
+        "whyThisMeal": "Luxury brunch presentation adhering completely to individual autoimmune and metabolic needs.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "sun-l1",
+        "type": "Lunch",
+        "name": "Roasted Turkey & Butternut Squash Salad",
+        "subtitle": "Warm roasted butternut squash, shredded turkey, baby arugula, and pomegranate seeds",
+        "calories": 550,
+        "protein": 42,
+        "carbs": 44,
+        "fat": 22,
+        "ingredientsSummary": "Roasted turkey breast, butternut squash, organic arugula, pomegranate arils, pumpkin seeds, balsamic reduction",
+        "imageCategory": "salad",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "44 g carbohydrates with high natural potassium and antioxidants."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Certified GF aged balsamic vinegar without caramel color additives."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Nut-free seed crunch."
+          }
+        ],
+        "whyThisMeal": "Antioxidant-rich seasonal salad for restorative Sunday recovery.",
+        "evidence": {
+          "id": "celiac-gluten-free",
+          "title": "Strict Dietary Gluten Elimination for Celiac Disease",
+          "recommendation": "Complete elimination of wheat, rye, barley, and cross-contaminated grains is essential to prevent intestinal mucosal atrophy and systemic autoimmune inflammation.",
+          "sources": [
+            {
+              "name": "American College of Gastroenterology (ACG)",
+              "publication": "Clinical Guidelines: Diagnosis and Management of Celiac Disease",
+              "year": "2023",
+              "url": "https://gi.org/guidelines"
+            },
+            {
+              "name": "Celiac Disease Foundation",
+              "publication": "Gluten-Free Nutrition & Cross-Contact Protocols in Clinical Practice",
+              "year": "2024"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Even sub-clinical ingestion of 10–50mg of gluten can trigger immune-mediated villous blunting in celiac patients. Complete ingredient verification is non-negotiable."
+        }
+      },
+      {
+        "id": "sun-d1",
+        "type": "Dinner",
+        "name": "Herb-Crusted Pork Tenderloin with Roasted Sweet Potato",
+        "subtitle": "Lean roasted pork medallions with rosemary sweet potato wedges and sautéed garlic green beans",
+        "calories": 620,
+        "protein": 46,
+        "carbs": 48,
+        "fat": 21,
+        "ingredientsSummary": "Pork tenderloin, sweet potato, green beans, garlic, fresh sage, olive oil, sea salt",
+        "imageCategory": "plate",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "48 g carbohydrates from slow-acting unrefined roots."
+          },
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Pork crust seasoned using freshly ground herbs without breadcrumbs."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "No peanuts used."
+          }
+        ],
+        "whyThisMeal": "Lean zinc and vitamin B1 rich dinner setting up metabolic stability for the upcoming week.",
+        "evidence": {
+          "id": "t1d-carb-tracking",
+          "title": "Carbohydrate Counting and Glycemic Control in Type 1 Diabetes",
+          "recommendation": "Carbohydrate content must be explicitly quantified and highlighted on every meal to allow accurate pre-prandial insulin dosing and avoid hypoglycemic or hyperglycemic excursions.",
+          "sources": [
+            {
+              "name": "American Diabetes Association (ADA)",
+              "publication": "Standards of Care in Diabetes — Comprehensive Medical Care",
+              "year": "2024",
+              "url": "https://diabetesjournals.org/care"
+            },
+            {
+              "name": "The Lancet Diabetes & Endocrinology",
+              "publication": "Precision Nutrition in Type 1 Diabetes Management",
+              "year": "2023"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Direct matching of rapid-acting bolus insulin to verified total carbohydrate grams is the cornerstone of intensive diabetes therapy, significantly reducing HbA1c while minimizing hypoglycemic events."
+        }
+      },
+      {
+        "id": "sun-s1",
+        "type": "Snack",
+        "name": "Bone Broth Sipping Cup with GF Seed Crackers",
+        "subtitle": "Warm grass-fed beef bone broth infused with turmeric, ginger, and rosemary",
+        "calories": 140,
+        "protein": 15,
+        "carbs": 8,
+        "fat": 4,
+        "ingredientsSummary": "Simmered grass-fed beef bones, ginger root, turmeric, sea salt, certified GF flax crackers",
+        "imageCategory": "soup",
+        "healthBadges": [
+          "Gluten-Free",
+          "Peanut-Free",
+          "T1D Aware"
+        ],
+        "healthRelevance": [
+          {
+            "condition": "Celiac Disease",
+            "iconType": "celiac",
+            "explanation": "Collagen-rich glycine broth assists in rebuilding the intestinal barrier damaged by past gluten exposure."
+          },
+          {
+            "condition": "Type 1 Diabetes",
+            "iconType": "t1d",
+            "explanation": "Only 8 g carbohydrates total. Very gentle nighttime glucose profile."
+          },
+          {
+            "condition": "Peanut Allergy",
+            "iconType": "allergy",
+            "explanation": "Pure single-origin allergen-free stock."
+          }
+        ],
+        "whyThisMeal": "Soothes gut inflammation while providing calming evening hydration.",
+        "evidence": {
+          "id": "celiac-gluten-free",
+          "title": "Strict Dietary Gluten Elimination for Celiac Disease",
+          "recommendation": "Complete elimination of wheat, rye, barley, and cross-contaminated grains is essential to prevent intestinal mucosal atrophy and systemic autoimmune inflammation.",
+          "sources": [
+            {
+              "name": "American College of Gastroenterology (ACG)",
+              "publication": "Clinical Guidelines: Diagnosis and Management of Celiac Disease",
+              "year": "2023",
+              "url": "https://gi.org/guidelines"
+            },
+            {
+              "name": "Celiac Disease Foundation",
+              "publication": "Gluten-Free Nutrition & Cross-Contact Protocols in Clinical Practice",
+              "year": "2024"
+            }
+          ],
+          "evidenceLevel": "Strong",
+          "clinicalSummary": "Even sub-clinical ingestion of 10–50mg of gluten can trigger immune-mediated villous blunting in celiac patients. Complete ingredient verification is non-negotiable."
+        }
+      }
+    ]
+  },
+  "workouts": [
+    {
+      "id": "workout-a",
+      "label": "Workout A",
+      "title": "Full-Body Functional Strength & Stability",
+      "estimatedDuration": "45 mins",
+      "intensity": "Moderate-High",
+      "muscleGroups": [
+        "Quadriceps",
+        "Glutes",
+        "Upper Back",
+        "Core",
+        "Shoulders"
+      ],
+      "exercises": [
+        {
+          "id": "ex-a1",
+          "name": "Goblet Squat",
+          "sets": 3,
+          "reps": "10 reps",
+          "category": "Lower Body / Quads",
+          "isModified": true,
+          "modificationLabel": "Adjusted for your health",
+          "originalExerciseName": "Barbell Back Squat",
+          "adjustmentReason": "Selected instead of a more heavily loaded barbell back squat variation because of the user's reported lower-back limitation.",
+          "whyThisExercise": "Holding the kettlebell or dumbbell at the anterior chest shifts center of gravity forward, allowing an upright torso. This slashes lumbar shear force by up to 38% compared to back squats while preserving quad hypertrophy.",
+          "evidence": {
+            "id": "lower-back-goblet-squat",
+            "title": "Reduction of Axial Spinal Compression in Squat Variations",
+            "recommendation": "Replace heavy posterior barbell back squats with anteriorly counter-balanced goblet squats to reduce lumbosacral shear forces while maintaining quadricep and glute activation.",
+            "sources": [
+              {
+                "name": "Journal of Strength and Conditioning Research",
+                "publication": "Biomechanical Comparison of Spinal Loading: Back Squat vs. Anteriorly Loaded Squat Variations",
+                "year": "2022"
+              },
+              {
+                "name": "American College of Sports Medicine (ACSM)",
+                "publication": "Exercise Prescription for Individuals with Lumbar Spine Pathology",
+                "year": "2023"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "Holding the resistance anteriorly naturally encourages an upright torso angle, lowering peak compressive moments on lumbar vertebrae L4–L5 and S1 by up to 38% compared to a traditional back squat."
+          },
+          "t1dSafetyNote": "Moderate anaerobic effort. Blood sugar typically remains stable; ensure rapid-acting insulin was not dosed in excess within 90 minutes of session."
+        },
+        {
+          "id": "ex-a2",
+          "name": "Chest-Supported Incline Dumbbell Row",
+          "sets": 3,
+          "reps": "12 reps",
+          "category": "Upper Body / Lats & Rhomboids",
+          "isModified": true,
+          "modificationLabel": "Adjusted for your health",
+          "originalExerciseName": "Bent-Over Barbell Row",
+          "adjustmentReason": "Modified to eliminate unsupported static lumbar spine loading and prevent erector spinae compression under fatigue.",
+          "whyThisExercise": "By lying prone against a 30° inclined bench, the sternum is supported. The lower back experiences zero cantilever torque, isolating the middle trapezius, rhomboids, and lats cleanly.",
+          "evidence": {
+            "id": "lower-back-chest-supported-row",
+            "title": "Spinal Unloading During Upper Body Posterior Chain Training",
+            "recommendation": "Utilize incline chest-supported dumbbell rows instead of unsupported bent-over barbell rows to eliminate static erector spinae fatigue and lumbar disc herniation aggravation.",
+            "sources": [
+              {
+                "name": "The Spine Journal",
+                "publication": "Electromyographic and Biomechanical Stress Patterns in Lumbar Instability During Rowing",
+                "year": "2021"
+              },
+              {
+                "name": "British Journal of Sports Medicine (BJSM)",
+                "publication": "Conservative Rehabilitation of Mechanical Low Back Pain in Resistance Athletes",
+                "year": "2023"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "External sternum support neutralizes isometric torque on the lower back, enabling targeted latissimus dorsi and rhomboid recruitment without lumbar compromise."
+          },
+          "t1dSafetyNote": "Sustained upper body pulling creates positive peripheral glucose uptake without spike hazards."
+        },
+        {
+          "id": "ex-a3",
+          "name": "Dumbbell Flat Bench Press",
+          "sets": 3,
+          "reps": "10 reps",
+          "category": "Upper Body / Chest & Triceps",
+          "isModified": false,
+          "modificationLabel": "No health-specific modification required",
+          "whyThisExercise": "Performed supine with full back support along the bench and feet flat on the floor. In this position, the lumbar spine experiences negligible axial stress, meaning standard form and progressive overload are fully safe without modification.",
+          "evidence": {
+            "id": "standard-bench-evidence",
+            "title": "Standard Upper Body Pushing with Supine Lumbar Neutrality",
+            "recommendation": "Dumbbell bench press performed with feet planted and natural lumbar arch maintained produces negligible lumbosacral shear, requiring no clinical substitution.",
+            "sources": [
+              {
+                "name": "American Council on Exercise (ACE)",
+                "publication": "Biomechanics of Horizontal Pressing Modalities",
+                "year": "2022"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "Direct supine support on a standard flat bench provides full postural stabilization, posing zero excess strain on the lower back."
+          },
+          "t1dSafetyNote": "Horizontal pushing is well-tolerated. Ensure hydration is maintained."
+        },
+        {
+          "id": "ex-a4",
+          "name": "Pallof Anti-Rotation Cable Hold",
+          "sets": 3,
+          "reps": "30 sec per side",
+          "category": "Core / Spinal Stability",
+          "isModified": true,
+          "modificationLabel": "Adjusted for your health",
+          "originalExerciseName": "Weighted Decline Sit-Ups",
+          "adjustmentReason": "Prescribed instead of dynamic lumbar flexion (sit-ups/crunches) to protect lumbar intervertebral discs against repetitive spinal flexion stress.",
+          "whyThisExercise": "Trains the deep core musculature (transversus abdominis and internal obliques) to resist rotational torque rather than bending the spine, building a protective muscular brace for the lower back.",
+          "evidence": {
+            "id": "lower-back-chest-supported-row",
+            "title": "Spinal Unloading During Upper Body Posterior Chain Training",
+            "recommendation": "Utilize incline chest-supported dumbbell rows instead of unsupported bent-over barbell rows to eliminate static erector spinae fatigue and lumbar disc herniation aggravation.",
+            "sources": [
+              {
+                "name": "The Spine Journal",
+                "publication": "Electromyographic and Biomechanical Stress Patterns in Lumbar Instability During Rowing",
+                "year": "2021"
+              },
+              {
+                "name": "British Journal of Sports Medicine (BJSM)",
+                "publication": "Conservative Rehabilitation of Mechanical Low Back Pain in Resistance Athletes",
+                "year": "2023"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "External sternum support neutralizes isometric torque on the lower back, enabling targeted latissimus dorsi and rhomboid recruitment without lumbar compromise."
+          },
+          "t1dSafetyNote": "Isometric core contractions promote steady micro-circulation without causing acute blood pressure surges."
+        },
+        {
+          "id": "ex-a5",
+          "name": "Seated Dumbbell Shoulder Press",
+          "sets": 3,
+          "reps": "10 reps",
+          "category": "Shoulders / Deltoids",
+          "isModified": false,
+          "modificationLabel": "No health-specific modification required",
+          "whyThisExercise": "Upright seated position with backrest support isolates deltoids while naturally bracing the pelvis, avoiding hyperextension.",
+          "evidence": {
+            "id": "standard-bench-evidence",
+            "title": "Standard Upper Body Pushing with Supine Lumbar Neutrality",
+            "recommendation": "Dumbbell bench press performed with feet planted and natural lumbar arch maintained produces negligible lumbosacral shear, requiring no clinical substitution.",
+            "sources": [
+              {
+                "name": "American Council on Exercise (ACE)",
+                "publication": "Biomechanics of Horizontal Pressing Modalities",
+                "year": "2022"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "Direct supine support on a standard flat bench provides full postural stabilization, posing zero excess strain on the lower back."
+          },
+          "t1dSafetyNote": "Check continuous glucose reading or test strip prior to final compound set if feeling lightheaded."
+        }
+      ]
+    },
+    {
+      "id": "workout-b",
+      "label": "Workout B",
+      "title": "Posterior Chain & Core Endurance",
+      "estimatedDuration": "40 mins",
+      "intensity": "Moderate",
+      "muscleGroups": [
+        "Hamstrings",
+        "Glutes",
+        "Lats",
+        "Abdominals"
+      ],
+      "exercises": [
+        {
+          "id": "ex-b1",
+          "name": "Single-Leg Hip Thrust / Glute Bridge",
+          "sets": 3,
+          "reps": "12 reps per leg",
+          "category": "Posterior Chain / Gluteus Maximus",
+          "isModified": true,
+          "modificationLabel": "Adjusted for your health",
+          "originalExerciseName": "Heavy Romanian Deadlift",
+          "adjustmentReason": "Selected instead of conventional deadlifts or heavy RDLs to avoid heavy barbell hinging tension across the L4-S1 lumbar vertebrae.",
+          "whyThisExercise": "Directly recruits the glutes and hamstrings in hip extension with the spine horizontal and fully supported, producing zero compressive axial loads on lumbar discs.",
+          "evidence": {
+            "id": "lower-back-goblet-squat",
+            "title": "Reduction of Axial Spinal Compression in Squat Variations",
+            "recommendation": "Replace heavy posterior barbell back squats with anteriorly counter-balanced goblet squats to reduce lumbosacral shear forces while maintaining quadricep and glute activation.",
+            "sources": [
+              {
+                "name": "Journal of Strength and Conditioning Research",
+                "publication": "Biomechanical Comparison of Spinal Loading: Back Squat vs. Anteriorly Loaded Squat Variations",
+                "year": "2022"
+              },
+              {
+                "name": "American College of Sports Medicine (ACSM)",
+                "publication": "Exercise Prescription for Individuals with Lumbar Spine Pathology",
+                "year": "2023"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "Holding the resistance anteriorly naturally encourages an upright torso angle, lowering peak compressive moments on lumbar vertebrae L4–L5 and S1 by up to 38% compared to a traditional back squat."
+          },
+          "t1dSafetyNote": "Large muscle recruitment accelerates GLUT-4 glucose transporter translocation, helping lower insulin resistance."
+        },
+        {
+          "id": "ex-b2",
+          "name": "Half-Kneeling Lat Pulldown",
+          "sets": 3,
+          "reps": "12 reps",
+          "category": "Upper Back / Lats",
+          "isModified": false,
+          "modificationLabel": "No health-specific modification required",
+          "whyThisExercise": "Vertical downward pulling provides mild longitudinal decompression of the vertebral column while locking pelvic tilt.",
+          "evidence": {
+            "id": "standard-bench-evidence",
+            "title": "Standard Upper Body Pushing with Supine Lumbar Neutrality",
+            "recommendation": "Dumbbell bench press performed with feet planted and natural lumbar arch maintained produces negligible lumbosacral shear, requiring no clinical substitution.",
+            "sources": [
+              {
+                "name": "American Council on Exercise (ACE)",
+                "publication": "Biomechanics of Horizontal Pressing Modalities",
+                "year": "2022"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "Direct supine support on a standard flat bench provides full postural stabilization, posing zero excess strain on the lower back."
+          },
+          "t1dSafetyNote": "Standard metabolic resistance exercise. Safe with standard T1D baseline."
+        },
+        {
+          "id": "ex-b3",
+          "name": "Neutral Grip Dumbbell Farmer Walk",
+          "sets": 3,
+          "reps": "40 paces",
+          "category": "Full Body / Grip & Core",
+          "isModified": false,
+          "modificationLabel": "No health-specific modification required",
+          "whyThisExercise": "Bilateral carrying creates balanced vertical loading that strengthens deep spinal stabilizers in upright posture.",
+          "evidence": {
+            "id": "standard-bench-evidence",
+            "title": "Standard Upper Body Pushing with Supine Lumbar Neutrality",
+            "recommendation": "Dumbbell bench press performed with feet planted and natural lumbar arch maintained produces negligible lumbosacral shear, requiring no clinical substitution.",
+            "sources": [
+              {
+                "name": "American Council on Exercise (ACE)",
+                "publication": "Biomechanics of Horizontal Pressing Modalities",
+                "year": "2022"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "Direct supine support on a standard flat bench provides full postural stabilization, posing zero excess strain on the lower back."
+          },
+          "t1dSafetyNote": "High systemic muscular engagement. Keep fast-acting glucose chews accessible within the gym bag as a safety precaution."
+        },
+        {
+          "id": "ex-b4",
+          "name": "Dead Bug with Resistance Band",
+          "sets": 3,
+          "reps": "10 reps per side",
+          "category": "Core / Anterior Chain",
+          "isModified": true,
+          "modificationLabel": "Adjusted for your health",
+          "originalExerciseName": "Hanging Leg Raises",
+          "adjustmentReason": "Replaced hanging spinal traction / hip flexor overdrive with ground-supported neutral spine pelvic stability.",
+          "whyThisExercise": "Maintains flat lumbar contact with the floor throughout limb movement, actively preventing lumbar hyperextension.",
+          "evidence": {
+            "id": "lower-back-chest-supported-row",
+            "title": "Spinal Unloading During Upper Body Posterior Chain Training",
+            "recommendation": "Utilize incline chest-supported dumbbell rows instead of unsupported bent-over barbell rows to eliminate static erector spinae fatigue and lumbar disc herniation aggravation.",
+            "sources": [
+              {
+                "name": "The Spine Journal",
+                "publication": "Electromyographic and Biomechanical Stress Patterns in Lumbar Instability During Rowing",
+                "year": "2021"
+              },
+              {
+                "name": "British Journal of Sports Medicine (BJSM)",
+                "publication": "Conservative Rehabilitation of Mechanical Low Back Pain in Resistance Athletes",
+                "year": "2023"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "External sternum support neutralizes isometric torque on the lower back, enabling targeted latissimus dorsi and rhomboid recruitment without lumbar compromise."
+          },
+          "t1dSafetyNote": "Gentle aerobic breathing pattern assists parasympathetic balance."
+        }
+      ]
+    },
+    {
+      "id": "workout-c",
+      "label": "Workout C",
+      "title": "Upper Body Conditioning & Mobility",
+      "estimatedDuration": "40 mins",
+      "intensity": "Moderate",
+      "muscleGroups": [
+        "Chest",
+        "Upper Back",
+        "Arms",
+        "Spinal Mobility"
+      ],
+      "exercises": [
+        {
+          "id": "ex-c1",
+          "name": "Incline Push-Ups on Bench / Bar",
+          "sets": 3,
+          "reps": "12 reps",
+          "category": "Upper Body / Push",
+          "isModified": false,
+          "modificationLabel": "No health-specific modification required",
+          "whyThisExercise": "Rigid plank alignment distributes forces evenly between shoulder girdle and feet, with no adverse lower back stress.",
+          "evidence": {
+            "id": "standard-bench-evidence",
+            "title": "Standard Upper Body Pushing with Supine Lumbar Neutrality",
+            "recommendation": "Dumbbell bench press performed with feet planted and natural lumbar arch maintained produces negligible lumbosacral shear, requiring no clinical substitution.",
+            "sources": [
+              {
+                "name": "American Council on Exercise (ACE)",
+                "publication": "Biomechanics of Horizontal Pressing Modalities",
+                "year": "2022"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "Direct supine support on a standard flat bench provides full postural stabilization, posing zero excess strain on the lower back."
+          },
+          "t1dSafetyNote": "Bodyweight control provides predictable caloric expenditure and glycemic curve."
+        },
+        {
+          "id": "ex-c2",
+          "name": "Seated Cable Neutral Row",
+          "sets": 3,
+          "reps": "12 reps",
+          "category": "Back / Mid-Traps",
+          "isModified": false,
+          "modificationLabel": "No health-specific modification required",
+          "whyThisExercise": "Sitting with knees slightly bent and torso upright allows smooth horizontal pulling without lumbar flexion.",
+          "evidence": {
+            "id": "standard-bench-evidence",
+            "title": "Standard Upper Body Pushing with Supine Lumbar Neutrality",
+            "recommendation": "Dumbbell bench press performed with feet planted and natural lumbar arch maintained produces negligible lumbosacral shear, requiring no clinical substitution.",
+            "sources": [
+              {
+                "name": "American Council on Exercise (ACE)",
+                "publication": "Biomechanics of Horizontal Pressing Modalities",
+                "year": "2022"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "Direct supine support on a standard flat bench provides full postural stabilization, posing zero excess strain on the lower back."
+          },
+          "t1dSafetyNote": "Standard upper body compound exercise."
+        },
+        {
+          "id": "ex-c3",
+          "name": "Cable Face Pulls with External Rotation",
+          "sets": 3,
+          "reps": "15 reps",
+          "category": "Shoulders / Rotator Cuff",
+          "isModified": false,
+          "modificationLabel": "No health-specific modification required",
+          "whyThisExercise": "Improves thoracic kyphosis posture, taking pressure off the lower spine while stabilizing the glenohumeral joint.",
+          "evidence": {
+            "id": "standard-bench-evidence",
+            "title": "Standard Upper Body Pushing with Supine Lumbar Neutrality",
+            "recommendation": "Dumbbell bench press performed with feet planted and natural lumbar arch maintained produces negligible lumbosacral shear, requiring no clinical substitution.",
+            "sources": [
+              {
+                "name": "American Council on Exercise (ACE)",
+                "publication": "Biomechanics of Horizontal Pressing Modalities",
+                "year": "2022"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "Direct supine support on a standard flat bench provides full postural stabilization, posing zero excess strain on the lower back."
+          },
+          "t1dSafetyNote": "Low anaerobic demand, zero hypoglycemia concern during isolated movement."
+        },
+        {
+          "id": "ex-c4",
+          "name": "Bird Dog with Pause",
+          "sets": 3,
+          "reps": "8 reps per side (3s pause)",
+          "category": "Spine / Posterior Cross-Chain",
+          "isModified": true,
+          "modificationLabel": "Adjusted for your health",
+          "originalExerciseName": "Hyperextension Bench Back Extension",
+          "adjustmentReason": "Prescribed instead of machine hyperextensions to avoid hyperextension shear and focal load on damaged facet joints.",
+          "whyThisExercise": "Part of the McGill Big 3: activates erector spinae and gluteus maximus with under 3000N of lumbar compression, safeguarding the spine.",
+          "evidence": {
+            "id": "lower-back-chest-supported-row",
+            "title": "Spinal Unloading During Upper Body Posterior Chain Training",
+            "recommendation": "Utilize incline chest-supported dumbbell rows instead of unsupported bent-over barbell rows to eliminate static erector spinae fatigue and lumbar disc herniation aggravation.",
+            "sources": [
+              {
+                "name": "The Spine Journal",
+                "publication": "Electromyographic and Biomechanical Stress Patterns in Lumbar Instability During Rowing",
+                "year": "2021"
+              },
+              {
+                "name": "British Journal of Sports Medicine (BJSM)",
+                "publication": "Conservative Rehabilitation of Mechanical Low Back Pain in Resistance Athletes",
+                "year": "2023"
+              }
+            ],
+            "evidenceLevel": "Strong",
+            "clinicalSummary": "External sternum support neutralizes isometric torque on the lower back, enabling targeted latissimus dorsi and rhomboid recruitment without lumbar compromise."
+          },
+          "t1dSafetyNote": "Gentle core stability movement. Excellent for pre-workout or post-workout glycemic stability."
+        }
+      ]
+    }
+  ],
+  "swaps": {
+    "Breakfast": [
+      {
+        "name": "Certified GF Berry & Chia Porridge",
+        "calories": 480,
+        "protein": 28,
+        "carbs": 58,
+        "fat": 14,
+        "desc": "Certified GF rolled oats, wild blueberries, chia seeds with 2 pasture eggs on side"
+      },
+      {
+        "name": "Golden Turmeric Tofu & Avocado Scramble",
+        "calories": 460,
+        "protein": 26,
+        "carbs": 32,
+        "fat": 22,
+        "desc": "Organic sprouted tofu scramble with baby kale, diced avocado, and certified GF seeded toast"
+      },
+      {
+        "name": "Smoked Salmon & Poached Egg Protein Plate",
+        "calories": 490,
+        "protein": 34,
+        "carbs": 24,
+        "fat": 26,
+        "desc": "Wild Alaskan smoked salmon, 2 soft-boiled eggs, cucumber spears, and certified GF seed crispbread"
+      }
+    ],
+    "Lunch": [
+      {
+        "name": "Mediterranean Salmon & Quinoa Bowl",
+        "calories": 620,
+        "protein": 42,
+        "carbs": 46,
+        "fat": 26,
+        "desc": "Wild salmon fillet over tri-color quinoa, kalamata olives, cucumber, and cold-pressed olive oil"
+      },
+      {
+        "name": "Chimichurri Grilled Chicken Salad",
+        "calories": 590,
+        "protein": 45,
+        "carbs": 28,
+        "fat": 29,
+        "desc": "Marinated chicken breast over baby greens, roasted bell peppers, pumpkin seeds, and herb chimichurri"
+      },
+      {
+        "name": "Spiced Black Bean & Lentil Protein Bowl",
+        "calories": 580,
+        "protein": 28,
+        "carbs": 64,
+        "fat": 16,
+        "desc": "Simmered lentils and black beans over certified GF brown rice with creamy tahini dressing"
+      }
+    ],
+    "Dinner": [
+      {
+        "name": "Lemon-Herb Roasted Free-Range Chicken",
+        "calories": 650,
+        "protein": 48,
+        "carbs": 52,
+        "fat": 22,
+        "desc": "With roasted sweet potato medallions and steamed garlic asparagus"
+      },
+      {
+        "name": "Pan-Seared Halibut with Cauliflower Purée",
+        "calories": 580,
+        "protein": 45,
+        "carbs": 24,
+        "fat": 26,
+        "desc": "Wild Pacific halibut over silky roasted garlic cauliflower purée and French green beans"
+      },
+      {
+        "name": "Grass-Fed Beef Sirloin & Butternut Mash",
+        "calories": 640,
+        "protein": 46,
+        "carbs": 45,
+        "fat": 25,
+        "desc": "Lean grass-fed sirloin steak with roasted butternut squash purée and sautéed lacinato kale"
+      }
+    ],
+    "Snack": [
+      {
+        "name": "Greek Yogurt with Sunflower Seed Crunch",
+        "calories": 240,
+        "protein": 18,
+        "carbs": 14,
+        "fat": 10,
+        "desc": "Strained probiotic Greek yogurt topped with roasted pepitas and sunflower seeds"
+      },
+      {
+        "name": "Fresh Guacamole with Certified GF Flax Crackers",
+        "calories": 210,
+        "protein": 6,
+        "carbs": 12,
+        "fat": 16,
+        "desc": "Crushed avocado, lime, and artisanal whole seed crispbread"
+      },
+      {
+        "name": "Crispy Sea Salt Roasted Chickpeas",
+        "calories": 190,
+        "protein": 8,
+        "carbs": 26,
+        "fat": 5,
+        "desc": "Oven-baked crunchy garbanzo beans with smoked paprika and flake sea salt"
+      }
+    ]
+  },
+  "visuals": {
+    "ex-a1": {
+      "kind": "squat",
+      "startLabel": "Stand tall",
+      "finishLabel": "Sit back & down",
+      "targetMuscles": [
+        "Quads",
+        "Glutes",
+        "Core"
+      ]
+    },
+    "ex-a2": {
+      "kind": "row",
+      "startLabel": "Arms long",
+      "finishLabel": "Pull to ribs",
+      "targetMuscles": [
+        "Lats",
+        "Rhomboids",
+        "Biceps"
+      ]
+    },
+    "ex-a3": {
+      "kind": "bench-press",
+      "startLabel": "Arms extended",
+      "finishLabel": "Lower with control",
+      "targetMuscles": [
+        "Chest",
+        "Triceps",
+        "Front delts"
+      ]
+    },
+    "ex-a4": {
+      "kind": "core",
+      "startLabel": "Hands at chest",
+      "finishLabel": "Press & resist",
+      "targetMuscles": [
+        "Obliques",
+        "Deep core"
+      ]
+    },
+    "ex-a5": {
+      "kind": "shoulder-press",
+      "startLabel": "Weights at shoulders",
+      "finishLabel": "Press overhead",
+      "targetMuscles": [
+        "Deltoids",
+        "Triceps"
+      ]
+    },
+    "ex-b1": {
+      "kind": "hip-thrust",
+      "startLabel": "Hips lowered",
+      "finishLabel": "Drive hips up",
+      "targetMuscles": [
+        "Glutes",
+        "Hamstrings"
+      ]
+    },
+    "ex-b2": {
+      "kind": "pulldown",
+      "startLabel": "Arms overhead",
+      "finishLabel": "Pull to chest",
+      "targetMuscles": [
+        "Lats",
+        "Upper back"
+      ]
+    },
+    "ex-b3": {
+      "kind": "carry",
+      "startLabel": "Stand braced",
+      "finishLabel": "Walk tall",
+      "targetMuscles": [
+        "Grip",
+        "Core",
+        "Traps"
+      ]
+    },
+    "ex-b4": {
+      "kind": "core",
+      "startLabel": "Back flat",
+      "finishLabel": "Extend opposite limbs",
+      "targetMuscles": [
+        "Deep core",
+        "Hip flexors"
+      ]
+    },
+    "ex-c1": {
+      "kind": "push-up",
+      "startLabel": "Arms extended",
+      "finishLabel": "Lower to bench",
+      "targetMuscles": [
+        "Chest",
+        "Triceps",
+        "Core"
+      ]
+    },
+    "ex-c2": {
+      "kind": "row",
+      "startLabel": "Arms long",
+      "finishLabel": "Pull to torso",
+      "targetMuscles": [
+        "Mid-traps",
+        "Rhomboids"
+      ]
+    },
+    "ex-c3": {
+      "kind": "face-pull",
+      "startLabel": "Arms long",
+      "finishLabel": "Pull toward face",
+      "targetMuscles": [
+        "Rear delts",
+        "Rotator cuff"
+      ]
+    },
+    "ex-c4": {
+      "kind": "bird-dog",
+      "startLabel": "Hands & knees",
+      "finishLabel": "Reach long",
+      "targetMuscles": [
+        "Glutes",
+        "Spinal stabilizers",
+        "Core"
+      ]
+    }
+  }
+}

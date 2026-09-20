@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
 import { Check, Sparkles, ShieldCheck, Zap, HeartPulse } from 'lucide-react';
+import type { Plan } from '../api/client';
 
-export const PricingScreen: React.FC = () => {
+export const PricingScreen: React.FC<{ currentPlan: Plan }> = ({ currentPlan }) => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
-  const [selectedTier, setSelectedTier] = useState<string>('Plus');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleSelectTier = (tierName: string) => {
-    setSelectedTier(tierName);
-    setToastMessage(`Selected the ${tierName} plan for this investor demo.`);
+    setToastMessage(`${tierName} plan changes are not available yet.`);
     setTimeout(() => setToastMessage(null), 3000);
   };
 
   const tiers = [
     {
-      name: 'Free',
+      name: 'Basic',
       tagline: 'Essential health-aware planning for individual starters.',
       priceMonthly: 0,
       priceAnnual: 0,
       highlighted: false,
-      buttonText: 'Current Plan',
+      buttonText: 'Choose Basic',
       buttonStyle: 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50',
       features: [
         'Basic 7-day meal plan',
@@ -121,6 +120,7 @@ export const PricingScreen: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto items-stretch">
         {tiers.map((tier) => {
           const isPlus = tier.highlighted;
+          const isCurrentPlan = tier.name === currentPlan.name;
           const price = billingCycle === 'annual' ? tier.priceAnnual : tier.priceMonthly;
 
           return (
@@ -190,7 +190,7 @@ export const PricingScreen: React.FC = () => {
                 onClick={() => handleSelectTier(tier.name)}
                 className={`w-full py-3 rounded-xl font-bold text-xs transition-all cursor-pointer ${tier.buttonStyle}`}
               >
-                {selectedTier === tier.name ? `Current Demo Selection: ${tier.name}` : tier.buttonText}
+                {isCurrentPlan ? 'Current Plan' : tier.buttonText}
               </button>
             </div>
           );

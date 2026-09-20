@@ -25,6 +25,11 @@ export interface HealthRelevanceItem {
 }
 
 export interface Meal {
+  recipeId?: number;
+  imageUrl?: string;
+  imageAlt?: string;
+  ingredients?: { ingredient: string; amount: string }[];
+  instructions?: string;
   id: string;
   type: 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack';
   name: string;
@@ -42,6 +47,11 @@ export interface Meal {
 }
 
 export interface Exercise {
+  exerciseId?: number;
+  imageUrl?: string;
+  visual?: ExerciseInstructionVisual;
+  instructions?: string;
+  alternatives?: { id: number; name: string; status: string; desc: string; isCurrent: boolean }[];
   id: string;
   name: string;
   sets: number;
@@ -67,6 +77,8 @@ export interface ExerciseInstructionVisual {
 }
 
 export interface WorkoutDay {
+  userWorkoutId?: number;
+  scheduledDate?: string;
   id: WorkoutDayId;
   label: string;
   title: string;

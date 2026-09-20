@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useDragControls } from 'motion/react';
 import { DayOfWeek, EvidenceCitation, Meal } from '../types';
 import {
   Activity, ChevronDown, ChevronUp, CircleGauge, Flame, Info, Nut,
@@ -11,52 +12,144 @@ interface MealPlanScreenProps {
   onSelectDay: (day: DayOfWeek) => void;
   onOpenEvidence: (evidence: EvidenceCitation) => void;
   onOpenSwapMeal: (meal: Meal, day: string) => void;
-  onAddSnack: (day: DayOfWeek, snack: Meal) => void;
+  onAddSnack: (day: DayOfWeek) => Promise<boolean>;
+  onReorderMeals: (day: DayOfWeek, mealIds: string[]) => Promise<boolean>;
 }
 
 const days: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const mealBenefits = (meal: Meal) => meal.whyThisMeal || meal.healthRelevance[0]?.explanation;
 const getToday = () => days[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
-const mealImages: Record<Meal['imageCategory'], string> = {
-  bowl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80',
-  salad: 'https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=900&q=80',
-  plate: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80',
-  smoothie: 'https://images.unsplash.com/photo-1553530666-ba11a90a0868?auto=format&fit=crop&w=900&q=80',
-  soup: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=80',
-};
-const mondayMealImages: Record<string, string> = {
-  'mon-b1': '/meal-images/monday-berry-chia-porridge.png',
-  'mon-l1': '/meal-images/monday-salmon-quinoa-bowl.png',
-  'mon-d1': '/meal-images/monday-lemon-herb-chicken.png',
-  'mon-s1': '/meal-images/monday-greek-yogurt-seeds.png',
-};
-const imageForMeal = (meal: Meal) => mondayMealImages[meal.id] || mealImages[meal.imageCategory];
+const imageForMeal = (meal: Meal) => meal.imageUrl;
 const sentenceCase = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
-const recipeForOneServing = (meal: Meal) => {
-  const portions = meal.type === 'Breakfast'
-    ? ['1 cup', '½ cup', '2 tbsp', '1 tsp']
-    : meal.type === 'Lunch'
-      ? ['140 g', '¾ cup', '1 cup', '1 tbsp']
-      : meal.type === 'Dinner'
-        ? ['160 g', '200 g', '1 cup', '1 tbsp']
-        : ['170 g', '¼ cup', '2 tbsp', '1 tsp'];
-  return meal.ingredientsSummary.split(',').map((ingredient, index) => ({
-    ingredient: ingredient.trim(),
-    amount: portions[index] || 'To taste',
-  }));
-};
+const recipeForOneServing = (meal: Meal) => meal.ingredients || [];
+
+function DraggableMealCard({
+  mealId,
+  isDragging,
+  onStart,
+  onMove,
+  onEnd,
+  onElementChange,
+  children,
+}: {
+  mealId: string;
+  isDragging: boolean;
+  onStart: (mealId: string) => void;
+  onMove: () => void;
+  onEnd: () => void;
+  onElementChange: (mealId: string, element: HTMLDivElement | null) => void;
+  children: (startDrag: (event: React.PointerEvent<HTMLElement>) => void) => React.ReactNode;
+}) {
+  const controls = useDragControls();
+
+  return <motion.div
+    ref={(element) => onElementChange(mealId, element)}
+    layout
+    drag="y"
+    dragControls={controls}
+    dragListener={false}
+    dragMomentum={false}
+    dragElastic={0.04}
+    dragSnapToOrigin
+    className={isDragging ? 'relative z-50' : 'relative z-0'}
+    style={{ zIndex: isDragging ? 50 : 0 }}
+    whileDrag={{ zIndex: 50 }}
+    onDrag={onMove}
+    onDragEnd={onEnd}
+    transition={{ type: 'spring', stiffness: 460, damping: 36, mass: 0.72 }}
+  >
+    {children((event) => {
+      event.preventDefault();
+      onStart(mealId);
+      controls.start(event);
+    })}
+  </motion.div>;
+}
 
 export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
-  weeklyMeals, selectedDay, onSelectDay, onOpenEvidence, onOpenSwapMeal,
+  weeklyMeals, selectedDay, onSelectDay, onOpenEvidence, onOpenSwapMeal, onAddSnack, onReorderMeals,
 }) => {
   const [openMeal, setOpenMeal] = useState<Meal | null>(null);
   const [recipeMealIds, setRecipeMealIds] = useState<Set<string>>(new Set());
   const [macroHeights, setMacroHeights] = useState<Record<string, number>>({});
   const [isWhyOpen, setIsWhyOpen] = useState(true);
   const [isHealthOpen, setIsHealthOpen] = useState(true);
+  const [addingSnack, setAddingSnack] = useState(false);
+  const [draggedMealId, setDraggedMealId] = useState<string | null>(null);
+  const [orderedMealIds, setOrderedMealIds] = useState<string[]>([]);
+  const orderRef = useRef<string[]>([]);
+  const dragStartOrderRef = useRef<string[]>([]);
+  const cardRefs = useRef(new Map<string, HTMLDivElement>());
+  useEffect(() => { setOpenMeal(current => current ? weeklyMeals[selectedDay]?.find(meal => meal.id === current.id) || null : null); }, [weeklyMeals, selectedDay]);
   const today = getToday();
   const meals = weeklyMeals[selectedDay] || [];
+  const displayedMeals = orderedMealIds.length === meals.length
+    ? orderedMealIds.map((id) => meals.find((meal) => meal.id === id)).filter((meal): meal is Meal => Boolean(meal))
+    : meals;
+
+  useEffect(() => {
+    const ids = meals.map((meal) => meal.id);
+    orderRef.current = ids;
+    setOrderedMealIds(ids);
+  }, [meals, selectedDay]);
+
+  const moveDraggedMeal = (targetMealId: string, placeAfter: boolean) => {
+    if (!draggedMealId || draggedMealId === targetMealId) return;
+    const currentOrder = orderRef.current;
+    const from = currentOrder.indexOf(draggedMealId);
+    const to = currentOrder.indexOf(targetMealId);
+    if (from < 0 || to < 0) return;
+    const next = [...currentOrder];
+    next.splice(from, 1);
+    const targetIndex = next.indexOf(targetMealId);
+    next.splice(targetIndex + (placeAfter ? 1 : 0), 0, draggedMealId);
+    if (next.every((id, index) => id === currentOrder[index])) return;
+    orderRef.current = next;
+    setOrderedMealIds(next);
+  };
+
+  const finishDrag = async () => {
+    const dragged = draggedMealId;
+    setDraggedMealId(null);
+    if (!dragged) return;
+    if (orderRef.current.every((id, index) => id === dragStartOrderRef.current[index])) return;
+    const saved = await onReorderMeals(selectedDay, orderRef.current);
+    if (!saved) {
+      const ids = meals.map((meal) => meal.id);
+      orderRef.current = ids;
+      setOrderedMealIds(ids);
+    }
+  };
+
+  const startDrag = (mealId: string) => {
+    dragStartOrderRef.current = [...orderRef.current];
+    setDraggedMealId(mealId);
+  };
+
+  const setCardElement = (mealId: string, element: HTMLDivElement | null) => {
+    if (element) cardRefs.current.set(mealId, element);
+    else cardRefs.current.delete(mealId);
+  };
+
+  const moveWhenHalfOver = () => {
+    if (!draggedMealId) return;
+    const draggedCard = cardRefs.current.get(draggedMealId);
+    if (!draggedCard) return;
+    const draggedBounds = draggedCard.getBoundingClientRect();
+    const draggedCenter = draggedBounds.top + draggedBounds.height / 2;
+    const target = displayedMeals.find((meal) => {
+      if (meal.id === draggedMealId) return false;
+      const targetCard = cardRefs.current.get(meal.id);
+      if (!targetCard) return false;
+      const bounds = targetCard.getBoundingClientRect();
+      return draggedCenter >= bounds.top && draggedCenter <= bounds.bottom;
+    });
+    if (!target) return;
+    const targetBounds = cardRefs.current.get(target.id)?.getBoundingClientRect();
+    if (!targetBounds) return;
+    moveDraggedMeal(target.id, draggedCenter > targetBounds.top + targetBounds.height / 2);
+  };
 
   const openDetails = (meal: Meal) => {
     setOpenMeal(meal);
@@ -120,14 +213,25 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
       </section>
 
       <section className="space-y-8">
-        {meals.map((meal) => (
+        <p className="-mb-4 text-center text-xs font-medium text-slate-500">Press, hold, and drag a meal card to change its place in the day.</p>
+        {displayedMeals.map((meal) => (
+          <React.Fragment key={meal.id}>
+          <DraggableMealCard mealId={meal.id} isDragging={draggedMealId === meal.id} onStart={startDrag} onMove={moveWhenHalfOver} onEnd={() => { void finishDrag(); }} onElementChange={setCardElement}>
+          {(startDrag) => <>
           <article
-            key={meal.id}
             onClick={() => openDetails(meal)}
             style={macroHeights[meal.id] ? { '--meal-card-height': `${macroHeights[meal.id]}px` } as React.CSSProperties : undefined}
-            className="relative grid cursor-pointer overflow-visible rounded-3xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md md:h-[var(--meal-card-height)] md:grid-cols-[1.2fr_0.7fr_1fr]"
+            className={`relative grid overflow-visible rounded-3xl border bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md md:h-[var(--meal-card-height)] md:grid-cols-[1.2fr_0.7fr_1fr] ${draggedMealId === meal.id ? 'z-20 border-teal-500 shadow-xl ring-2 ring-teal-500/20' : 'border-slate-200'}`}
           >
-            <span className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 shadow-sm">{meal.type}</span>
+            <span
+              role="button"
+              tabIndex={0}
+              aria-label={`Drag ${meal.type} to reorder it`}
+              aria-grabbed={draggedMealId === meal.id}
+              onClick={(event) => event.stopPropagation()}
+              onPointerDown={startDrag}
+              className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 cursor-grab touch-none rounded-xl border border-amber-300 bg-amber-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 shadow-sm transition hover:border-amber-400 hover:bg-amber-100 active:cursor-grabbing"
+            >{meal.type}</span>
             <section className="flex min-h-56 flex-col p-5 sm:p-6">
               <button onClick={(event) => { event.stopPropagation(); openDetails(meal); }} className="cursor-pointer text-center text-lg font-bold leading-snug text-slate-900 hover:text-teal-700 sm:text-xl">
                 {meal.name}
@@ -189,8 +293,13 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
               </div>}
             </section>
           </article>
+          </>}
+          </DraggableMealCard>
+          </React.Fragment>
         ))}
       </section>
+
+      <button type="button" disabled={addingSnack} onClick={async () => { setAddingSnack(true); await onAddSnack(selectedDay); setAddingSnack(false); }} className="rounded-xl border border-teal-200 bg-teal-50 px-4 py-2.5 text-xs font-bold text-teal-800 disabled:opacity-50">{addingSnack ? 'Adding snack…' : 'Add snack'}</button>
 
       {openMeal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent p-4" onClick={() => setOpenMeal(null)}>
@@ -202,11 +311,9 @@ export const MealPlanScreen: React.FC<MealPlanScreenProps> = ({
             <div className="space-y-4 p-5">
               <section className="rounded-2xl border border-teal-100 bg-teal-50/60 p-4">
                 <h3 className="flex items-center gap-2 text-sm font-bold text-teal-950"><Info className="h-4 w-4 text-teal-600" />Meal research</h3>
-                <p className="mt-1 text-sm leading-relaxed text-slate-600">This meal supports your current nutrition goals through its verified ingredients, balanced macros, and condition-aware preparation.</p>
+                <p className="mt-1 text-sm leading-relaxed text-slate-600">{openMeal.whyThisMeal}</p>
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs font-bold text-teal-700">
-                  <a href="https://example.com/nutrition-study" target="_blank" rel="noreferrer" className="underline hover:text-teal-900">Nutrition study ↗</a>
-                  <a href="https://example.com/meal-guidance" target="_blank" rel="noreferrer" className="underline hover:text-teal-900">Meal guidance ↗</a>
-                  <a href="https://example.com/ingredient-reference" target="_blank" rel="noreferrer" className="underline hover:text-teal-900">Ingredient reference ↗</a>
+                  {openMeal.evidence.sources.filter(source => source.url).map(source => <a key={source.url} href={source.url} target="_blank" rel="noreferrer" className="underline hover:text-teal-900">{source.name} ↗</a>)}
                 </div>
               </section>
               <section className="rounded-2xl border border-slate-200"><button onClick={() => setIsWhyOpen(!isWhyOpen)} className="flex w-full cursor-pointer items-center justify-between p-4 text-left"><span className="flex items-center gap-2 text-sm font-bold"><Info className="h-4 w-4 text-teal-600" />Why this meal?</span>{isWhyOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</button>{isWhyOpen && <p className="border-t border-slate-100 p-4 text-sm leading-relaxed text-slate-600">{mealBenefits(openMeal)}</p>}</section>

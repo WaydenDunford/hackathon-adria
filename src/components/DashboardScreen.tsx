@@ -19,10 +19,11 @@ import {
 } from 'lucide-react';
 
 interface DashboardScreenProps {
+  summary: { averageCalories: number; averageProtein: number; mealCount: number; workoutCount: number };
   healthProfile: HealthProfileState;
   userName: string;
   dailyCheckIn: DailyCheckIn | null;
-  onSaveDailyCheckIn: (draft: Omit<DailyCheckIn, 'date' | 'completedAt' | 'planAdjusted' | 'adjustmentSummary'>) => void;
+  onSaveDailyCheckIn: (draft: Omit<DailyCheckIn, 'date' | 'completedAt' | 'planAdjusted' | 'adjustmentSummary'>) => Promise<boolean>;
   onNavigate: (tab: NavTab) => void;
   onOpenAdjustments: () => void;
 }
@@ -143,6 +144,7 @@ const profileSummaryItems = (profile: HealthProfileState) => {
 };
 
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({
+  summary,
   healthProfile,
   userName,
   dailyCheckIn,
@@ -168,7 +170,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
     ...(healthProfile.conditions.includes('Type 1 Diabetes') ? ['Type 1 Diabetes exercise safety guidance included'] : []),
   ];
   const auditHighlights = [
-    ...healthProfile.allergies.map((allergy) => ({ title: `21 / 21 meals checked for ${allergy.toLowerCase()}`, description: `${allergy} is excluded from recommendations.` })),
+    ...healthProfile.allergies.map((allergy) => ({ title: `${summary.mealCount} / ${summary.mealCount} meals checked for ${allergy.toLowerCase()}`, description: `${allergy} is excluded from recommendations.` })),
     ...healthProfile.dietaryPreferences.map((preference) => ({ title: `${preference} preference applied`, description: 'All meals are filtered to match your preference.' })),
     ...(healthProfile.conditions.filter((condition) => condition.includes('Diabetes')).map((condition) => ({ title: `${condition} meal information ready`, description: 'Carbohydrate information is available for every meal and snack.' }))),
     ...healthProfile.physicalLimitations.map((limitation) => ({ title: `${limitation} movement review complete`, description: 'Workout recommendations account for this consideration.' })),
@@ -298,7 +300,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                     Daily Target
                   </div>
                   <div className="text-base font-extrabold text-slate-900 mt-0.5">
-                    ~2,150 <span className="text-xs font-normal text-slate-500">kcal</span>
+                    {summary.averageCalories.toLocaleString()} <span className="text-xs font-normal text-slate-500">kcal</span>
                   </div>
                 </div>
                 <div>
@@ -306,7 +308,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                     Avg Protein
                   </div>
                   <div className="text-base font-extrabold text-slate-900 mt-0.5">
-                    118 <span className="text-xs font-normal text-slate-500">g/day</span>
+                    {summary.averageProtein} <span className="text-xs font-normal text-slate-500">g/day</span>
                   </div>
                 </div>
                 <div>
@@ -348,7 +350,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                   <h3 className="text-xl font-bold text-slate-900">Workout Plan</h3>
                 </div>
                 <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200/60">
-                  3 Workouts / Week
+                  {summary.workoutCount} Workouts / Week
                 </span>
               </div>
 
@@ -359,7 +361,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                     Schedule
                   </div>
                   <div className="text-base font-extrabold text-slate-900 mt-0.5">
-                    3 Days <span className="text-xs font-normal text-slate-500">/ wk</span>
+                    {summary.workoutCount} Days <span className="text-xs font-normal text-slate-500">/ wk</span>
                   </div>
                 </div>
                 <div>

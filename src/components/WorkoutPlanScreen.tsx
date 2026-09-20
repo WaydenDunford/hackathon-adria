@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { WorkoutDay, WorkoutDayId, Exercise, EvidenceCitation } from '../types';
-import { exerciseVisuals } from '../data/exerciseVisuals';
-import { exerciseImages } from '../data/exerciseImages';
 import { ExerciseInstructionVisual } from './ExerciseInstructionVisual';
 import {
   Dumbbell,
@@ -62,7 +60,7 @@ export const WorkoutPlanScreen: React.FC<WorkoutPlanScreenProps> = ({
         {/* Safety Indicator */}
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-50 text-purple-900 border border-purple-200 text-xs font-semibold self-start sm:self-auto">
           <ShieldCheck className="w-4 h-4 text-purple-600" />
-          <span>Lower-Back Protection Active</span>
+          <span>{workouts.some(w => w.exercises.some(e => e.isModified)) ? 'Lower-Back Protection Active' : 'Movement Plan Ready'}</span>
         </div>
       </div>
 
@@ -158,8 +156,8 @@ export const WorkoutPlanScreen: React.FC<WorkoutPlanScreenProps> = ({
 
         {currentWorkout.exercises.map((exercise) => {
           const isWhyExpanded = !!expandedWhyIds[exercise.id];
-          const exerciseVisual = exerciseVisuals[exercise.id];
-          const exerciseImage = exerciseImages[exercise.id];
+          const exerciseVisual = exercise.visual;
+          const exerciseImage = exercise.imageUrl;
 
           return (
             <div

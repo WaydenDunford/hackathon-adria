@@ -11,17 +11,20 @@ import {
   Wheat,
   Nut,
   CheckCircle2,
+  LogOut,
   X
 } from 'lucide-react';
 
 interface HealthProfileScreenProps {
   initialProfile: HealthProfileState;
-  onSaveProfile: (updatedProfile: HealthProfileState) => void;
+  onSaveProfile: (updatedProfile: HealthProfileState) => Promise<boolean>;
+  onLogout: () => void;
 }
 
 export const HealthProfileScreen: React.FC<HealthProfileScreenProps> = ({
   initialProfile,
   onSaveProfile,
+  onLogout,
 }) => {
   const [conditions, setConditions] = useState<string[]>(initialProfile.conditions);
   const [allergies, setAllergies] = useState<string[]>(initialProfile.allergies);
@@ -108,14 +111,14 @@ export const HealthProfileScreen: React.FC<HealthProfileScreenProps> = ({
     setCustomConditionInput('');
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const updated: HealthProfileState = {
       conditions,
       allergies,
       dietaryPreferences,
       physicalLimitations: limitations,
     };
-    onSaveProfile(updated);
+    if (!await onSaveProfile(updated)) return;
     setHasSavedNotice(true);
     setTimeout(() => setHasSavedNotice(false), 4500);
   };
@@ -123,7 +126,8 @@ export const HealthProfileScreen: React.FC<HealthProfileScreenProps> = ({
   return (
     <div className="space-y-8 animate-fade-in pb-16">
       {/* Header */}
-      <div>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200 text-xs font-semibold mb-2">
           <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
           <span>Clinical Personalization Engine</span>
@@ -131,6 +135,11 @@ export const HealthProfileScreen: React.FC<HealthProfileScreenProps> = ({
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
           Your Health Profile &amp; Safeguards
         </h1>
+        </div>
+        <button type="button" onClick={onLogout} className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-600 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700">
+          <LogOut className="h-4 w-4" />
+          Log out
+        </button>
       </div>
 
       {/* Saved Toast Banner */}
